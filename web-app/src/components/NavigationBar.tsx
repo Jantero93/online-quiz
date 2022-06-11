@@ -7,7 +7,7 @@ import NavDropdown from 'react-bootstrap/esm/NavDropdown';
 
 const NavigationBar = () => {
   return (
-    <NavBar className="_ColorDepth-Bg-2" expand="lg">
+    <NavBar className="_ColorDepth-Bg-2" expand="lg" variant="dark">
       <Container>
         <NavBar.Brand href="#home">React-Bootstrap</NavBar.Brand>
         <NavBar.Toggle aria-controls="basic-navbar-nav" />
