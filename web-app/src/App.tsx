@@ -8,6 +8,7 @@ import NavigationBar from './components/NavigationBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/colors.css';
 import './styles/fonts.css';
+import './styles/spacing.css';
 
 const App = () => {
   useEffect(() => {
@@ -18,8 +19,12 @@ const App = () => {
     <Router>
       <NavigationBar />
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/custom-calendar" element={<CustomCalendar />} />
+        <Route path="/" key={'home'} element={<HomePage />} />
+        <Route
+          path="/custom-calendar"
+          key={'calendar'}
+          element={<CustomCalendar />}
+        />
       </Routes>
     </Router>
   );
