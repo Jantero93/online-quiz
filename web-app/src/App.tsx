@@ -6,6 +6,7 @@ import HomePage from './views/HomePage';
 import NavigationBar from './components/NavigationBar';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-calendar/dist/Calendar.css';
 import './styles/colors.css';
 import './styles/fonts.css';
 import './styles/spacing.css';

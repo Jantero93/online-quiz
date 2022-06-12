@@ -1,17 +1,33 @@
 import React, { useState } from 'react';
+import Col from 'react-bootstrap/esm/Col';
+import Container from 'react-bootstrap/esm/Container';
+import Row from 'react-bootstrap/esm/Row';
 import Calendar from 'react-calendar';
 
 import CalendarForm from '../components/CustomCalendar/CalendarForm';
+
+import '../styles/react-calendar.css';
 
 const CustomCalendar = () => {
   const [date, setDate] = useState(new Date());
   const [clickedDay, setClickedDay] = useState(new Date());
 
   return (
-    <div className="_ColorDepth-Bg-3">
-      <Calendar onClickDay={setClickedDay} onChange={setDate} value={date} />
-      <CalendarForm clickedDate={clickedDay} />
-    </div>
+    <Container className="mt-5">
+      <Row className="_ColorDepth-Bg-3">
+        <div className="d-flex justify-content-center">
+          <Calendar
+            className="m-5 react-calendar"
+            onClickDay={setClickedDay}
+            onChange={setDate}
+            value={date}
+          />
+        </div>
+      </Row>
+      <Row className="_ColorDepth-Bg-3">
+        <CalendarForm clickedDate={clickedDay} />
+      </Row>
+    </Container>
   );
 };
 
