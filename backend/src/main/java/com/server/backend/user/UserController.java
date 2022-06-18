@@ -7,8 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @RestController
 public class UserController {
@@ -19,7 +22,7 @@ public class UserController {
   UserService userService;
 
   @PostMapping("/user")
-  UserDto PostUser(@RequestBody UserDto user) {
+  UserDto PostUser(@Valid @RequestBody UserDto user) {
     LOGGER.info("Post new user");
     UserDto userFromDb = userService.createNewUser(user);
 
@@ -28,5 +31,17 @@ public class UserController {
     }
 
     return userFromDb;
+  }
+
+  @PostMapping("/user/login")
+  String login(@Valid @RequestBody UserDto user, HttpServletResponse response) {
+    Cookie cookie = userService.login(user);
+
+    if (cookie != null) {
+      response.addCookie(cookie);
+      return "Successfully logged";
+    }
+
+    return "Login failed";
   }
 }
