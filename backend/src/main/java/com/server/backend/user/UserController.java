@@ -35,13 +35,16 @@ public class UserController {
 
   @PostMapping("/user/login")
   String login(@Valid @RequestBody UserDto user, HttpServletResponse response) {
+    LOGGER.info("Logging with email " + user.getEmail());
+
     Cookie cookie = userService.login(user);
+    cookie.setHttpOnly(true);
+    cookie.setSecure(true);
+    // 1 h
+    cookie.setMaxAge(60 * 60);
 
-    if (cookie != null) {
-      response.addCookie(cookie);
-      return "Successfully logged";
-    }
+    response.addCookie(cookie);
 
-    return "Login failed";
+    return "Successfully logged";
   }
 }

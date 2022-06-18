@@ -24,10 +24,7 @@ public class UserService {
   @Autowired
   JwtTokenUtil jwtTokenUtil;
 
-  @Value("${jwt.secret}")
-  private String jwtSecret;
-
-  UserDto createNewUser(UserDto userDto) {
+  public UserDto createNewUser(UserDto userDto) {
     LOGGER.info("Creating new user to DB");
 
     User user = UserMapper.DtoToUser(userDto);
@@ -36,11 +33,11 @@ public class UserService {
 
     if (userDb != null) {
       LOGGER.warn("User with email " + userDb.getEmail() + " exist already");
-
-      return null;
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+          "User with email " + userDb.getEmail() + " exists already");
     }
 
-    String passwordHash = createPwHash(user.getPassword());
+    String passwordHash = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10));
 
     user.setPassword(passwordHash);
     user.setCreatedDate(Instant.now().toString());
@@ -70,10 +67,4 @@ public class UserService {
     String JWT = jwtTokenUtil.generateJWT(userDb.getEmail());
     return new Cookie("token", JWT);
   }
-
-  private String createPwHash(String pw) {
-    int strength = 10;
-    return BCrypt.hashpw(pw, BCrypt.gensalt(strength));
-  }
-  
 }
