@@ -9,7 +9,7 @@ const SignUp = () => {
   const [errors, setErrors] = useState<string[]>([]);
 
   const isPasswordsSame = () => password === confirmPassword;
-  const isPasswordValid = () => password.length > 6 && password.length <= 30;
+  const isPasswordValid = () => password.length >= 6 && password.length <= 30;
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

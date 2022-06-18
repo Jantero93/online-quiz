@@ -6,7 +6,9 @@ import org.hibernate.Hibernate;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "email")
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,9 +18,10 @@ public class User {
   @GeneratedValue
   private Integer id;
 
-  @Column(unique = true)
   private String email;
+
   private String password;
+
   private String createdDate;
 
 }
