@@ -3,12 +3,7 @@ package com.server.backend.user;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.Date;
-import java.util.Objects;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
@@ -21,8 +16,9 @@ public class User {
   @GeneratedValue
   private Integer id;
 
-  private String accountName;
-  private String passwordHash;
-  private Date createdDate;
+  @Column(unique = true)
+  private String email;
+  private String password;
+  private String createdDate;
 
 }

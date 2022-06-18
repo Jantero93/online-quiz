@@ -22,8 +22,8 @@ const NavigationBar = () => {
               Calendar
             </Nav.Link>
           </Nav>
-          <Nav.Link className="_ColorDepth-3" as={Link} to="sign-up">
-            Sign up
+          <Nav.Link className="_ColorDepth-3" as={Link} to="login">
+            Login
           </Nav.Link>
         </NavBar.Collapse>
       </Container>

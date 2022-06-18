@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import CustomCalendar from './views/CustomCalendar';
+import Login from './views/Login';
 import HomePage from './views/HomePage';
 import SignUp from './views/SignUp';
 
@@ -29,7 +30,8 @@ const App = () => {
           key={'calendar'}
           element={<CustomCalendar />}
         />
-        <Route path="/sign-up" key={'signup'} element={<SignUp />} />
+        <Route path="/login" key={'login'} element={<Login />} />
+        <Route path="/login/sign-up" key={'signup'} element={<SignUp />} />
       </Routes>
     </Router>
   );
