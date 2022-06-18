@@ -8,13 +8,13 @@ import NavBar from 'react-bootstrap/NavBar';
 const NavigationBar = () => {
   return (
     <NavBar className="_ColorDepth-Bg-2" expand="lg" variant="dark">
-      <Container>
+      <Container fluid>
         <NavBar.Brand as={Link} to="/">
           Online Quiz
         </NavBar.Brand>
-        <NavBar.Toggle aria-controls="basic-navbar-nav" />
-        <NavBar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+        <NavBar.Toggle aria-controls="NavBarScroll" />
+        <NavBar.Collapse id="NavBarScroll">
+          <Nav className="me-auto my-2 my-lg-0">
             <Nav.Link as={Link} to="/">
               Home
             </Nav.Link>
@@ -22,6 +22,9 @@ const NavigationBar = () => {
               Calendar
             </Nav.Link>
           </Nav>
+          <Nav.Link as={Link} to="sign-up">
+            Sign up
+          </Nav.Link>
         </NavBar.Collapse>
       </Container>
     </NavBar>
