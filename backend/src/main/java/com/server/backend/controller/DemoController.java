@@ -1,6 +1,6 @@
 package com.server.backend.controller;
 
-import com.server.backend.calendar.CalendarData;
+import com.server.backend.calendar.Calendar;
 import com.server.backend.calendar.CalendarRepository;
 import com.server.backend.user.User;
 import com.server.backend.user.UserRepository;
@@ -21,17 +21,15 @@ public class DemoController {
 
   @GetMapping("/")
   String home() {
-    return "HELLO FROM SERVER!";
+    return "HELLO FsROM SERVER!";
   }
 
   @GetMapping("/moi")
   String test() {
 
-    CalendarData c = new CalendarData();
-
-    c.setName( "test name" );
-
-    calendarRepository.save( c );
+    Calendar c = new Calendar();
+    c.setName("test name");
+    calendarRepository.save(c);
 
     return "test test";
   }
@@ -39,9 +37,9 @@ public class DemoController {
   @GetMapping("/user-test")
   String userTest() {
     User u = new User();
-    u.setCreatedDate( new Date() );
-    u.setAccountName( "test account" );
-    u.setPasswordHash( "passwordHash" );
+    u.setCreatedDate(new Date());
+    u.setAccountName("test account");
+    u.setPasswordHash("passwordHash");
     userRepository.save(u);
 
 

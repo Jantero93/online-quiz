@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CalendarData {
+public class Calendar {
 
   @Id
   @GeneratedValue
