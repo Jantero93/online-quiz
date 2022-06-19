@@ -33,8 +33,10 @@ public class UserService {
 
     if (userDb != null) {
       LOGGER.warn("User with email " + userDb.getEmail() + " exist already");
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-          "User with email " + userDb.getEmail() + " exists already");
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST,
+          "User with email " + userDb.getEmail() + " exists already"
+      );
     }
 
     String passwordHash = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10));
@@ -54,7 +56,10 @@ public class UserService {
 
     if (userDb == null) {
       LOGGER.warn("No found user with email " + user.getEmail());
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with email " + user.getEmail());
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND,
+          "No user found with email " + user.getEmail()
+      );
     }
 
     boolean pwMatch = BCrypt.checkpw(user.getPassword(), userDb.getPassword());

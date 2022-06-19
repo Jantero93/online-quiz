@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
+
+import { createUser } from '../services/userServices';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -11,17 +14,19 @@ const SignUp = () => {
   const isPasswordsSame = () => password === confirmPassword;
   const isPasswordValid = () => password.length >= 6 && password.length <= 30;
 
-  const submit = (event: React.FormEvent<HTMLFormElement>) => {
+  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setErrors([]);
 
     if (!isPasswordsSame()) setErrors(errors.concat("Password don't match"));
     if (!isPasswordValid()) setErrors(errors.concat('Password length 6 - 30'));
-
     if (errors.length) return;
 
-    console.log(email);
-    console.log(password);
+    try {
+      await createUser(email, password);
+    } catch (error) {
+      console.log('error', error);
+    }
   };
 
   return (
@@ -33,7 +38,7 @@ const SignUp = () => {
         <Form.Label>Email address</Form.Label>
         <Form.Control onChange={(e) => setEmail(e.target.value)} type="email" />
         <Form.Text className="text-muted">
-          Well never share your email with anyone else.
+          {`We'll never share your email with anyone else.`}
         </Form.Text>
       </Form.Group>
 

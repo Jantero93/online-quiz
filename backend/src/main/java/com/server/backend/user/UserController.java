@@ -16,12 +16,14 @@ import javax.validation.Valid;
 @RestController
 public class UserController {
 
+  final String URL = "api/user";
+
   private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
   UserService userService;
 
-  @PostMapping("/user")
+  @PostMapping(URL)
   UserDto PostUser(@Valid @RequestBody UserDto user) {
     LOGGER.info("Post new user");
     UserDto userFromDb = userService.createNewUser(user);
@@ -33,7 +35,7 @@ public class UserController {
     return userFromDb;
   }
 
-  @PostMapping("/user/login")
+  @PostMapping(URL + "login")
   String login(@Valid @RequestBody UserDto user, HttpServletResponse response) {
     LOGGER.info("Logging with email " + user.getEmail());
 
