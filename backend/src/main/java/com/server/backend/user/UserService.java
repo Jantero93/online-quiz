@@ -48,7 +48,7 @@ public class UserService {
     return UserMapper.UserToDto(savedUser);
   }
 
-  public Cookie login(UserDto userDto) {
+  public String login(UserDto userDto) {
     LOGGER.info("Logging user with email " + userDto.getEmail());
     User user = UserMapper.DtoToUser(userDto);
 
@@ -69,7 +69,6 @@ public class UserService {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password do not match");
     }
 
-    String JWT = jwtTokenUtil.generateJWT(userDb.getEmail());
-    return new Cookie("token", JWT);
+    return jwtTokenUtil.generateJWT(userDb.getEmail());
   }
 }

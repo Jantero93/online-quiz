@@ -32,9 +32,12 @@ const App = () => {
         />
         <Route path="/login" key={'login'} element={<Login />} />
         <Route path="/login/sign-up" key={'signup'} element={<SignUp />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
 };
+
+const NotFound = () => <div className="_ColorDepth-4">Not found 404</div>;
 
 export default App;

@@ -4,15 +4,22 @@ import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
 import { Link } from 'react-router-dom';
 
+import { loginUser } from '../services/userServices';
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const [error, setError] = useState('');
+  const [error, setError] = useState('');
 
-  const submit = (event: React.FormEvent<HTMLFormElement>) => {
+  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('email: ' + email);
-    console.log('password', password);
+
+    try {
+      await loginUser(email, password);
+    } catch (error) {
+      console.error('error', error);
+      setError('Login failed');
+    }
   };
 
   return (
@@ -42,7 +49,7 @@ const Login = () => {
       <p>
         No account? <Link to="/login/sign-up">Register here</Link>
       </p>
-      {'error' && <p className="_Error-Text">{'error'}</p>}
+      {error && <p className="_Error-Text">{error}</p>}
     </Form>
   );
 };

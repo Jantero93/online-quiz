@@ -26,24 +26,20 @@ public class UserController {
   @PostMapping(URL)
   UserDto PostUser(@Valid @RequestBody UserDto user) {
     LOGGER.info("Post new user");
-    UserDto userFromDb = userService.createNewUser(user);
-
-    if (userFromDb == null) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already taken");
-    }
-
-    return userFromDb;
+    return userService.createNewUser(user);
   }
 
-  @PostMapping(URL + "login")
+  @PostMapping(URL + "/login")
   String login(@Valid @RequestBody UserDto user, HttpServletResponse response) {
     LOGGER.info("Logging with email " + user.getEmail());
 
-    Cookie cookie = userService.login(user);
+    String JWT = userService.login(user);
+
+    Cookie cookie = new Cookie("token", JWT);
     cookie.setHttpOnly(true);
     cookie.setSecure(true);
-    // 1 h
-    cookie.setMaxAge(60 * 60);
+    // 3 h
+    cookie.setMaxAge(60 * 60 * 3);
 
     response.addCookie(cookie);
 
