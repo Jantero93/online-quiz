@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Button from 'react-bootstrap/esm/Button';
+import ButtonGroup from 'react-bootstrap/esm/ButtonGroup';
 import Form from 'react-bootstrap/esm/Form';
 
 import { createUser } from '../services/userServices';
@@ -11,6 +13,8 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
 
+  const navigate = useNavigate();
+
   const isPasswordsSame = () => password === confirmPassword;
   const isPasswordValid = () => password.length >= 6 && password.length <= 30;
 
@@ -18,8 +22,13 @@ const SignUp = () => {
     event.preventDefault();
     setErrors([]);
 
-    if (!isPasswordsSame()) setErrors(errors.concat("Password don't match"));
-    if (!isPasswordValid()) setErrors(errors.concat('Password length 6 - 30'));
+    if (!isPasswordsSame()) {
+      setErrors((errors) => [...errors, 'Passwords do not match']);
+    }
+    if (!isPasswordValid()) {
+      setErrors((errors) => [...errors, 'Password is not valid']);
+    }
+
     if (errors.length) return;
 
     try {
@@ -58,9 +67,18 @@ const SignUp = () => {
         />
       </Form.Group>
 
-      <Button className="_ColorDepth-Bg-3" type="submit">
-        Submit
-      </Button>
+      <ButtonGroup className="d-flex justify-content-between">
+        <Button
+          className="_Max_Width_150"
+          variant="dark"
+          onClick={() => navigate('/login')}
+        >
+          Login
+        </Button>
+        <Button className="_Max_Width_150" variant="info" type="submit">
+          Sign up
+        </Button>
+      </ButtonGroup>
       {errors.map((error) => (
         <p className="_Error-Text" key={error}>
           {error}

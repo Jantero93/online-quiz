@@ -43,8 +43,8 @@ const Login = () => {
         />
       </Form.Group>
 
-      <Button className="_ColorDepth-Bg-3" type="submit">
-        Submit
+      <Button variant={'info'} type="submit">
+        Login
       </Button>
       <p>
         No account? <Link to="/login/sign-up">Register here</Link>
