@@ -32,13 +32,13 @@ public class JwtTokenUtil {
 
   public String generateJWT(String email) {
     Date now = new Date();
-    Date nowPlusHour = new Date(now.getTime() + TimeUnit.HOURS.toMillis(1));
+    Date plusThreeHours = new Date(now.getTime() + TimeUnit.HOURS.toMillis(3));
 
     return Jwts.builder()
         .claim("authEmail", email)
         .setId(secret)
         .setIssuedAt(now)
-        .setExpiration(nowPlusHour)
+        .setExpiration(plusThreeHours)
         .compact();
   }
 

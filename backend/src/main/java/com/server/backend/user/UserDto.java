@@ -1,17 +1,16 @@
 package com.server.backend.user;
 
+import com.server.backend.calendar.Calendar;
 import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-public class UserDto {
+@Data
+public class UserDto implements Serializable {
 
   @NotEmpty
   @Email
@@ -19,4 +18,6 @@ public class UserDto {
 
   @Size(min = 6, max = 30)
   private String password;
+
+  List<Calendar> calendarList;
 }

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
-import { Link } from 'react-router-dom';
 
 import { loginUser } from '../services/userServices';
 
@@ -30,9 +30,6 @@ const Login = () => {
       <Form.Group className="mb-3" controlId="email">
         <Form.Label>Email address</Form.Label>
         <Form.Control onChange={(e) => setEmail(e.target.value)} type="email" />
-        <Form.Text className="text-muted">
-          Well never share your email with anyone else.
-        </Form.Text>
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="password">

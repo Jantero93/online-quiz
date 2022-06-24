@@ -1,4 +1,4 @@
-package com.server.backend.user;
+package com.server.backend.misc;
 
 import com.server.backend.misc.JwtTokenUtil;
 import org.jetbrains.annotations.NotNull;

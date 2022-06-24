@@ -13,15 +13,13 @@ const CustomCalendar = () => {
 
   return (
     <Container className="mt-5">
-      <Row className="_ColorDepth-Bg-3">
-        <div className="d-flex justify-content-center">
-          <Calendar
-            className="m-5 react-calendar"
-            onClickDay={setClickedDay}
-            onChange={setDate}
-            value={date}
-          />
-        </div>
+      <Row className="_ColorDepth-Bg-3 rounded d-flex justify-content-center">
+        <Calendar
+          className="m-5 react-calendar"
+          onClickDay={setClickedDay}
+          onChange={setDate}
+          value={date}
+        />
       </Row>
       <Row className="_ColorDepth-Bg-3">
         <CalendarForm clickedDate={clickedDay} />

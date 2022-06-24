@@ -12,6 +12,13 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class UserController {
@@ -24,13 +31,13 @@ public class UserController {
   UserService userService;
 
   @PostMapping(URL)
-  UserDto PostUser(@Valid @RequestBody UserDto user) {
+  public UserDto PostUser(@Valid @RequestBody UserDto user) {
     LOGGER.info("Post new user");
     return userService.createNewUser(user);
   }
 
   @PostMapping(URL + "/login")
-  String login(@Valid @RequestBody UserDto user, HttpServletResponse response) {
+  public String login(@Valid @RequestBody UserDto user, HttpServletResponse response) {
     LOGGER.info("Logging with email " + user.getEmail());
 
     String JWT = userService.login(user);
@@ -43,6 +50,12 @@ public class UserController {
 
     response.addCookie(cookie);
 
-    return "Successfully logged";
+    return toThreeHoursToIsoString();
+  }
+
+  private String toThreeHoursToIsoString() {
+    return ZonedDateTime.now(ZoneOffset.UTC)
+        .plusHours(3)
+        .format(DateTimeFormatter.ISO_INSTANT);
   }
 }

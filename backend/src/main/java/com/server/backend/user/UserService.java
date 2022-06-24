@@ -12,6 +12,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.Cookie;
 import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class UserService {
@@ -42,7 +45,9 @@ public class UserService {
     String passwordHash = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10));
 
     user.setPassword(passwordHash);
-    user.setCreatedDate(Instant.now().toString());
+    user.setCreatedDate(ZonedDateTime
+        .now(ZoneOffset.UTC)
+        .format(DateTimeFormatter.ISO_INSTANT));
 
     User savedUser = userRepository.save(user);
     return UserMapper.UserToDto(savedUser);
