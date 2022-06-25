@@ -10,8 +10,8 @@ class UserController {
   post(@Body({ validate: true }) user: UserDto) {
     logger.info('Controller: Creating new user');
 
-    UserService.postUser(user);
-    return user;
+    const savedUser = UserService.postUser(user);
+    return savedUser;
   }
 }
 
