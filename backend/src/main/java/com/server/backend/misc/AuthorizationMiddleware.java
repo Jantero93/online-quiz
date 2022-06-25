@@ -1,6 +1,7 @@
 package com.server.backend.misc;
 
 import com.server.backend.misc.JwtTokenUtil;
+import com.server.backend.user.User;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +48,9 @@ public class AuthorizationMiddleware extends OncePerRequestFilter {
         .map(Cookie::getValue)
         .orElse(null);
 
-    request.setAttribute("email", jwtTokenUtil.getEmailFromJwt(jwt));
+    request.setAttribute("user", jwtTokenUtil.getUserFromJwt(jwt));
 
-    LOGGER.info("Exiting authorization with email " + request.getAttribute("email"));
+    LOGGER.info("Exiting authorization user " + request.getAttribute("user").toString());
     filterChain.doFilter(request, response);
   }
 }

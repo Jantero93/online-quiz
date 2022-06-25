@@ -74,6 +74,6 @@ public class UserService {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password do not match");
     }
 
-    return jwtTokenUtil.generateJWT(userDb.getEmail());
+    return jwtTokenUtil.generateJWT(userDb.getId(), userDb.getEmail());
   }
 }
