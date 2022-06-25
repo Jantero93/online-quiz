@@ -8,7 +8,7 @@ const requestLogger = (req: Request, _res: Response, next: NextFunction) => {
   logger.info(`Method: ${req.method}`);
   logger.info(`Path: ${req.path}`);
   req.body && logger.info(`Body: ${req.body}`);
-  isParams && logger.info(`Params: ${JSON.stringify(req.params)}`);
+  isParams && logger.info(`Params: ${req.params}`);
 
   next();
 };

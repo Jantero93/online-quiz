@@ -1,15 +1,17 @@
-import winston from 'winston';
+import { createLogger, format, transports } from 'winston';
 
-const { colorize, splat, combine, timestamp, printf } = winston.format;
+const custom = format.printf((info) => `${info.level}: ${info.message}`);
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const myFormat = printf(({ timestamp, level, message, meta }) => {
-  return `${level} ${message} ${meta ? meta : ''}`;
-});
-
-const logger = winston.createLogger({
-  format: combine(colorize(), timestamp(), splat(), myFormat),
-  transports: [new winston.transports.Console()]
+const logger = createLogger({
+  format: format.combine(
+    format((info) => {
+      info.level = info.level.toUpperCase();
+      return info;
+    })(),
+    format.colorize(),
+    custom
+  ),
+  transports: [new transports.Console()]
 });
 
 export default logger;
