@@ -1,8 +1,13 @@
-import { Response, Request } from 'express';
-
+import { Controller, Get } from 'routing-controllers';
 import logger from '../utility/logger';
 
-export const root = (req: Request, res: Response) => {
-  logger.info('Root controller');
-  res.send('Express + TypeScript from controller');
-};
+@Controller()
+class RootController {
+  @Get('/')
+  getRoot() {
+    logger.info('Root Controller');
+    return 'This is message from root';
+  }
+}
+
+export default RootController;
