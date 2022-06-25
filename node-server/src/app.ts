@@ -5,14 +5,16 @@ import AppDataSource from './config/db/DataSource';
 import requestLogger from './middleware/requestLogger';
 import logger from './utility/logger';
 
-import control from './controller/RootController';
+import RootController from './controller/RootController';
+import UserController from './controller/UserController';
+
 const app = express();
 
 AppDataSource.initialize()
   .then(() => {
     app.use(requestLogger);
     useExpressServer(app, {
-      controllers: [control]
+      controllers: [RootController, UserController]
     });
   })
   .catch((error) => logger.error('Db not initialized', error));
