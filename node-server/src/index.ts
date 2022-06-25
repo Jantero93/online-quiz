@@ -1,12 +1,13 @@
-import express, { Request, Response } from 'express';
+import { createServer } from 'http';
 
-const app = express();
-const port = 8080;
+import logger from './utils/logger';
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
-});
+import app from './app';
 
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
-});
+const server = createServer(app);
+
+try {
+  server.listen(8080, () => logger.info(`Connected successfully on port ${8080}`));
+} catch (error) {
+  logger.error(error);
+}
