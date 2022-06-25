@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import logger from '../utils/logger';
+import logger from '../utility/logger';
 
 const requestLogger = (req: Request, _res: Response, next: NextFunction) => {
   const isParams = Object.keys(req.params).length > 0;

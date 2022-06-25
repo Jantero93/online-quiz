@@ -1,12 +1,18 @@
 import express from 'express';
+import AppDataSource from './config/db/DataSource';
 
-import routes from './routes/indexRoutes';
+import routes from './route/indexRoutes';
 
 import requestLogger from './middleware/requestLogger';
+import logger from './utility/logger';
 
 const app = express();
 
-app.use(requestLogger);
-app.use(routes);
+AppDataSource.initialize()
+  .then(() => {
+    app.use(requestLogger);
+    app.use(routes);
+  })
+  .catch((error) => logger.error('Db not initialized', error));
 
 export default app;

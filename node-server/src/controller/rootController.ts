@@ -1,6 +1,6 @@
 import { Response, Request } from 'express';
 
-import logger from '../utils/logger';
+import logger from '../utility/logger';
 
 export const root = (req: Request, res: Response) => {
   logger.info('Root controller');

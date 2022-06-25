@@ -1,6 +1,6 @@
 import { createServer } from 'http';
 
-import logger from './utils/logger';
+import logger from './utility/logger';
 
 import config from './config/config';
 
