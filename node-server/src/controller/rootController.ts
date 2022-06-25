@@ -1,12 +1,12 @@
-import { Controller, Get } from 'routing-controllers';
+import { Get, JsonController } from 'routing-controllers';
 import logger from '../utility/logger';
 
-@Controller()
+@JsonController()
 class RootController {
   @Get('/')
   getRoot() {
     logger.info('Root Controller');
-    return 'This is message from root';
+    return { msg: 'Root endpoint' };
   }
 }
 
