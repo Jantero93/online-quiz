@@ -1,5 +1,7 @@
 package com.server.backend.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.backend.misc.BCryptUtil;
 import com.server.backend.misc.JwtTokenUtil;
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 
 @Service
 public class UserService {
@@ -56,7 +59,7 @@ public class UserService {
     return UserMapper.UserToDto(savedUser);
   }
 
-  public String login(UserDto userDto) {
+  public HashMap<String, Object> login(UserDto userDto) throws JsonProcessingException {
     LOGGER.info("Logging user with email " + userDto.getEmail());
     User user = UserMapper.DtoToUser(userDto);
 
@@ -77,6 +80,12 @@ public class UserService {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password do not match");
     }
 
-    return jwtTokenUtil.generateJWT(userDb.getId(), userDb.getEmail());
+    UserDto newDto = UserMapper.UserToDto(userDb);
+    String JWT = jwtTokenUtil.generateJWT(userDb.getId(), userDb.getEmail());
+
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("JWT", JWT);
+    map.put("user", newDto);
+    return map;
   }
 }

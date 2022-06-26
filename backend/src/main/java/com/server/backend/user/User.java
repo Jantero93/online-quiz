@@ -23,7 +23,7 @@ public class User {
 
   private String createdDate;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private List<Calendar> calendarList;
 
 }

@@ -22,5 +22,4 @@ public class Question {
 
     private String difficulty;
 
-    private Integer userCreated;
 }

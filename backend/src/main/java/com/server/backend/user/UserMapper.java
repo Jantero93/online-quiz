@@ -5,6 +5,7 @@ public final class UserMapper {
   public static UserDto UserToDto(User user) {
     UserDto u = new UserDto();
     u.setEmail(user.getEmail());
+    u.setId(user.getId());
     return u;
   }
 

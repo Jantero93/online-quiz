@@ -1,13 +1,15 @@
 export interface UserState {
   isLogged: boolean;
   email: string;
+  userId: string;
   expires: string;
 }
 
 const initialState: UserState = {
   isLogged: false,
   email: '',
-  expires: ''
+  expires: '',
+  userId: ''
 };
 
 export type SetUserLog = {

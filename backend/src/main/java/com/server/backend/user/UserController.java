@@ -1,5 +1,6 @@
 package com.server.backend.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,23 +39,25 @@ public class UserController {
   }
 
   @PostMapping(URL + "/login")
-  public HashMap<String, String> login(@Valid @RequestBody UserDto user, HttpServletResponse response) {
+  public HashMap<String, Object> login(@Valid @RequestBody UserDto user, HttpServletResponse response) throws JsonProcessingException {
     LOGGER.info("Logging with email " + user.getEmail());
 
-    String JWT = userService.login(user);
+    HashMap<String, Object> map = userService.login(user);
 
-    Cookie cookie = new Cookie("token", JWT);
+    Cookie cookie = new Cookie("token", (String) map.get("JWT"));
     cookie.setHttpOnly(true);
     cookie.setSecure(true);
     // 3 h
     cookie.setMaxAge(60 * 60 * 3);
-
     response.addCookie(cookie);
 
+    UserDto responseUser = (UserDto) map.get("user");
+
     String expiresTime = toThreeHoursToIsoString();
-    HashMap<String, String> map = new HashMap<>();
-    map.put("expires", expiresTime);
-    return map;
+    HashMap<String, Object> responseMap = new HashMap<>();
+    responseMap.put("expires", expiresTime);
+    responseMap.put("user", responseUser);
+    return responseMap;
 
   }
 

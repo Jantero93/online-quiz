@@ -18,6 +18,9 @@ public class QuestionController {
     @PostMapping(URL)
     public QuestionDto postQuestion(@RequestBody QuestionDto questionDto) {
         LOGGER.info("Posting new question");
+
+
+
         return questionService.createQuestion(questionDto);
     }
 }
