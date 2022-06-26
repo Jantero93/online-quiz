@@ -1,5 +1,6 @@
 package com.server.backend.user;
 
+import com.server.backend.misc.BCryptUtil;
 import com.server.backend.misc.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +26,13 @@ public class UserService {
   UserRepository userRepository;
 
   @Autowired
+  BCryptUtil bCryptUtil;
+
+  @Autowired
   JwtTokenUtil jwtTokenUtil;
 
   public UserDto createNewUser(UserDto userDto) {
     LOGGER.info("Creating new user to DB");
-
     User user = UserMapper.DtoToUser(userDto);
 
     User userDb = userRepository.findByEmail(user.getEmail());
@@ -42,7 +45,7 @@ public class UserService {
       );
     }
 
-    String passwordHash = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10));
+    String passwordHash = bCryptUtil.hashPw(user.getPassword());
 
     user.setPassword(passwordHash);
     user.setCreatedDate(ZonedDateTime
@@ -67,7 +70,7 @@ public class UserService {
       );
     }
 
-    boolean pwMatch = BCrypt.checkpw(user.getPassword(), userDb.getPassword());
+    boolean pwMatch = bCryptUtil.passwordMatch(user.getPassword(), userDb.getPassword());
 
     if (!pwMatch) {
       LOGGER.warn("Login failed, password did not match");
