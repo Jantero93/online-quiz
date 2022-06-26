@@ -94,6 +94,7 @@ const AddQuestion = () => {
       <div key="inline-radio" className="mb-3">
         <Form.Check
           inline
+          defaultChecked
           label="Easy"
           name="group1"
           type={'radio'}
