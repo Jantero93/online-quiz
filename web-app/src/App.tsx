@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+import AddQuestion from './views/AddQuestion';
 import CustomCalendar from './views/CustomCalendar';
 import Login from './views/Login';
 import HomePage from './views/HomePage';
@@ -24,6 +25,7 @@ const App = () => {
     <Router>
       <NavigationBar />
       <Routes>
+        {/* Main */}
         <Route path="/" key={'home'} element={<HomePage />} />
         <Route
           path="/custom-calendar"
@@ -33,6 +35,12 @@ const App = () => {
         <Route path="/login" key={'login'} element={<Login />} />
         <Route path="/login/sign-up" key={'signup'} element={<SignUp />} />
         <Route path="*" element={<NotFound />} />
+        {/* Quiz */}
+        <Route
+          path="/question/add"
+          key={'add-question'}
+          element={<AddQuestion />}
+        />
       </Routes>
     </Router>
   );
