@@ -27,5 +27,5 @@ export const loginUser = async (
   };
 
   const request = await axios.post(`${URL}/login`, user);
-  return (request.data as User).email;
+  return request.data.expires;
 };

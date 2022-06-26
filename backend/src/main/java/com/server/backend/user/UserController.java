@@ -17,6 +17,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +38,7 @@ public class UserController {
   }
 
   @PostMapping(URL + "/login")
-  public String login(@Valid @RequestBody UserDto user, HttpServletResponse response) {
+  public HashMap<String, String> login(@Valid @RequestBody UserDto user, HttpServletResponse response) {
     LOGGER.info("Logging with email " + user.getEmail());
 
     String JWT = userService.login(user);
@@ -50,7 +51,11 @@ public class UserController {
 
     response.addCookie(cookie);
 
-    return toThreeHoursToIsoString();
+    String expiresTime = toThreeHoursToIsoString();
+    HashMap<String, String> map = new HashMap<>();
+    map.put("expires", expiresTime);
+    return map;
+
   }
 
   private String toThreeHoursToIsoString() {

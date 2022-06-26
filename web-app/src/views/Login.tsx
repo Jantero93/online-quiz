@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
+
+import { setUserLogged } from '../store/actions/userActions';
 
 import { loginUser } from '../services/userServices';
 
@@ -11,11 +14,15 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const dispatch = useDispatch();
+
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
-      await loginUser(email, password);
+      const expires = await loginUser(email, password);
+      console.log('expires', expires);
+      dispatch(setUserLogged(email, expires));
     } catch (error) {
       console.error('error', error);
       setError('Login failed');
