@@ -1,91 +1,80 @@
 package com.server.backend.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.server.backend.misc.BCryptUtil;
-import com.server.backend.misc.JwtTokenUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.Cookie;
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
+
+@Slf4j
+@Transactional
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
-  private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    UserRepository userRepository;
 
-  @Autowired
-  UserRepository userRepository;
+    @Autowired
+    RoleRepository roleRepository;
 
-  @Autowired
-  BCryptUtil bCryptUtil;
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  @Autowired
-  JwtTokenUtil jwtTokenUtil;
 
-  public UserDto createNewUser(UserDto userDto) {
-    LOGGER.info("Creating new user to DB");
-    User user = UserMapper.DtoToUser(userDto);
-
-    User userDb = userRepository.findByEmail(user.getEmail());
-
-    if (userDb != null) {
-      LOGGER.warn("User with email " + userDb.getEmail() + " exist already");
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST,
-          "User with email " + userDb.getEmail() + " exists already"
-      );
+    public User saveUser(User user) {
+        log.info("Saving new user {} to the database", user.getUsername());
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
-    String passwordHash = bCryptUtil.hashPw(user.getPassword());
-
-    user.setPassword(passwordHash);
-    user.setCreatedDate(ZonedDateTime
-        .now(ZoneOffset.UTC)
-        .format(DateTimeFormatter.ISO_INSTANT));
-
-    User savedUser = userRepository.save(user);
-    return UserMapper.UserToDto(savedUser);
-  }
-
-  public HashMap<String, Object> login(UserDto userDto) throws JsonProcessingException {
-    LOGGER.info("Logging user with email " + userDto.getEmail());
-    User user = UserMapper.DtoToUser(userDto);
-
-    User userDb = userRepository.findByEmail(user.getEmail());
-
-    if (userDb == null) {
-      LOGGER.warn("No found user with email " + user.getEmail());
-      throw new ResponseStatusException(
-          HttpStatus.NOT_FOUND,
-          "No user found with email " + user.getEmail()
-      );
+    public Role saveRole(Role role) {
+        log.info("Saving new role {} to the database", role.getName());
+        return roleRepository.save(role);
     }
 
-    boolean pwMatch = bCryptUtil.passwordMatch(user.getPassword(), userDb.getPassword());
-
-    if (!pwMatch) {
-      LOGGER.warn("Login failed, password did not match");
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password do not match");
+    public void addRoleToUser(String username, String roleName) {
+        log.info("Adding role {} to user {}", roleName, username);
+        User user = userRepository.findByUsername(username);
+        Role role = roleRepository.findByName(roleName);
+        user.getRoles().add(role);
     }
 
-    UserDto newDto = UserMapper.UserToDto(userDb);
-    String JWT = jwtTokenUtil.generateJWT(userDb.getId(), userDb.getEmail());
+    public User getUser(String username) {
+        log.info("Getting user by username {}", username);
+        return userRepository.findByUsername(username);
+    }
 
-    HashMap<String, Object> map = new HashMap<>();
-    map.put("JWT", JWT);
-    map.put("user", newDto);
-    return map;
-  }
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            log.error("No user found with username {}", username);
+            throw new UsernameNotFoundException("No user found with username " + username);
+        }
+
+        log.info("Found user from database with username {}", username);
+
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        user.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        });
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(), user.getPassword(), authorities
+        );
+    }
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -18,7 +19,7 @@ public class Question {
     private String correctOption;
 
     @ElementCollection
-    private List<String> wrongOptions;
+    private Set<String> wrongOptions;
 
     private String difficulty;
 

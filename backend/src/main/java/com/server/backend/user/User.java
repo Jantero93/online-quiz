@@ -1,29 +1,29 @@
 package com.server.backend.user;
 
-import com.server.backend.calendar.Calendar;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "email")
-})
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name ="users")
 public class User {
 
-  @Id
-  @GeneratedValue
-  private Integer id;
+    @Id
+    @GeneratedValue
+    private Integer id;
 
-  private String email;
+    private String username;
 
-  private String password;
+    private String password;
 
-  private String createdDate;
-
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  private List<Calendar> calendarList;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<Role> roles = new ArrayList<>();
 
 }

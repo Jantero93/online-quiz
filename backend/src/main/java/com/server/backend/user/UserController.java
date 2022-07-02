@@ -1,69 +1,106 @@
 package com.server.backend.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.text.SimpleDateFormat;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
 
 @RestController
+@RequestMapping("/api")
+@Slf4j
 public class UserController {
 
-  final String URL = "api/user";
+    @Autowired
+    UserService userService;
 
-  private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    @GetMapping("/")
+    public String hello() {
+        return "hello";
+    }
 
-  @Autowired
-  UserService userService;
+    @PostMapping("/user")
+    public User saveUser(@RequestBody User user) {
+        return userService.saveUser(user);
+    }
 
-  @PostMapping(URL)
-  public UserDto PostUser(@Valid @RequestBody UserDto user) {
-    LOGGER.info("Post new user");
-    return userService.createNewUser(user);
-  }
+    @PostMapping("/role")
+    public Role saveRole(@RequestBody Role role) {
+        return userService.saveRole(role);
+    }
 
-  @PostMapping(URL + "/login")
-  public HashMap<String, Object> login(@Valid @RequestBody UserDto user, HttpServletResponse response) throws JsonProcessingException {
-    LOGGER.info("Logging with email " + user.getEmail());
+    @PostMapping("/role/addtouser")
+    public ResponseEntity<Optional<?>> addRoleToUser(@RequestBody RoleToUserForm form) {
+        userService.addRoleToUser(form.getUsername(), form.getUsername());
+        return ResponseEntity.ok().build();
+    }
 
-    HashMap<String, Object> map = userService.login(user);
+    @GetMapping("/token/refresh")
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            try {
+                String refreshToken = authorizationHeader.substring("Bearer ".length());
+                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
 
-    Cookie cookie = new Cookie("token", (String) map.get("JWT"));
-    cookie.setHttpOnly(true);
-    cookie.setSecure(true);
-    // 3 h
-    cookie.setMaxAge(60 * 60 * 3);
-    response.addCookie(cookie);
+                JWTVerifier verifier = JWT.require(algorithm).build();
+                DecodedJWT decodedJWT = verifier.verify(refreshToken);
 
-    UserDto responseUser = (UserDto) map.get("user");
+                String username = decodedJWT.getSubject();
 
-    String expiresTime = toThreeHoursToIsoString();
-    HashMap<String, Object> responseMap = new HashMap<>();
-    responseMap.put("expires", expiresTime);
-    responseMap.put("user", responseUser);
-    return responseMap;
+                User user = userService.getUser(username);
 
-  }
+                String accessToken = JWT.create()
+                        .withSubject(user.getUsername())
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                        .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                        .sign(algorithm);
 
-  private String toThreeHoursToIsoString() {
-    return ZonedDateTime.now(ZoneOffset.UTC)
-        .plusHours(3)
-        .format(DateTimeFormatter.ISO_INSTANT);
-  }
+                Map<String, String> tokens = new HashMap<>();
+                tokens.put("access_token", accessToken);
+                tokens.put("refresh_token", refreshToken);
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+            } catch (Exception e) {
+                response.setHeader("error", e.getMessage());
+                Map<String, String> error = new HashMap<>();
+                error.put("error_message", e.getMessage());
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(), error);
+            }
+
+            throw new RuntimeException("Refresh token is missing");
+        }
+    }
+
+    @GetMapping("/users")
+    public List<User> getUsers() {
+         return userService.getUsers();
+     }
+}
+
+@Data
+class RoleToUserForm {
+    private String username;
+    private String roleName;
 }
