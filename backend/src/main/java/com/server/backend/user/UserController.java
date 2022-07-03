@@ -41,22 +41,27 @@ public class UserController {
 
     @PostMapping("/user")
     public User saveUser(@RequestBody User user) {
+        log.info("Creating new user");
         return userService.saveUser(user);
     }
 
     @PostMapping("/role")
     public Role saveRole(@RequestBody Role role) {
+        log.info("Creating new role {}", role.getName());
         return userService.saveRole(role);
     }
 
     @PostMapping("/role/addtouser")
     public ResponseEntity<Optional<?>> addRoleToUser(@RequestBody RoleToUserForm form) {
+        log.info("Adding new role {} to user {}", form.getRoleName(), form.getUsername());
         userService.addRoleToUser(form.getUsername(), form.getUsername());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        log.info("Refreshing token ");
+
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
@@ -82,21 +87,24 @@ public class UserController {
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
             } catch (Exception e) {
-                response.setHeader("error", e.getMessage());
+                log.error("Refreshing token failed with message {}", e.getMessage());
                 Map<String, String> error = new HashMap<>();
                 error.put("error_message", e.getMessage());
+
+                response.setHeader("error", e.getMessage());
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
 
+            log.error("No refresh token found");
             throw new RuntimeException("Refresh token is missing");
         }
     }
 
     @GetMapping("/users")
     public List<User> getUsers() {
-         return userService.getUsers();
-     }
+        return userService.getUsers();
+    }
 }
 
 @Data
