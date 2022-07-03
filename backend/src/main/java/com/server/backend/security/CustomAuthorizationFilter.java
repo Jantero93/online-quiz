@@ -36,6 +36,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         if (request.getServletPath().equals("/login") || request.getServletPath().equals("/api/token/refresh/**")) {
             filterChain.doFilter(request, response);
+            return;
         }
 
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -58,14 +59,18 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
                 filterChain.doFilter(request, response);
+                return;
             } catch (Exception e) {
                 log.error("Error logging in: {}", e.getMessage());
-                response.setHeader("error", e.getMessage());
                 Map<String, String> error = new HashMap<>();
                 error.put("error_message", e.getMessage());
+
+                response.setHeader("error", e.getMessage());
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
         }
+
+        filterChain.doFilter(request, response);
     }
 }
