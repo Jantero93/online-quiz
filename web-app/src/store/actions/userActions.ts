@@ -1,15 +1,14 @@
 import { SetUserLog } from '../reducers/userReducer';
 
 export const setUserLogged = (
-  userId: string,
-  email: string,
-  expires: string
+  accessToken: string,
+  refreshToken: string,
+  isLogged: boolean
 ): SetUserLog => ({
   payload: {
-    email,
-    expires,
-    userId,
-    isLogged: true
+    accessToken,
+    refreshToken,
+    isLogged
   },
   type: 'SET_USER_LOGGED'
 });

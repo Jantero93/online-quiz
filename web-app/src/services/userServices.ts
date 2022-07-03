@@ -1,36 +1,33 @@
 import axios from 'axios';
 
-import { User } from '../types/user';
-
 const URL = '/api/user';
+const LOGIN_URL = '/login';
 
 export type LoginResponse = {
-  expires: string;
-  user: { id: number; email: string };
+  access_token: string;
+  refresh_token: string;
 };
 
 export const createUser = async (
   email: string,
   password: string
-): Promise<string> => {
+): Promise<void> => {
   const user = {
     email,
     password
   };
 
-  const request = await axios.post(URL, user);
-  return (request.data as User).email;
+  await axios.post(URL, user);
 };
 
 export const loginUser = async (
   email: string,
   password: string
 ): Promise<LoginResponse> => {
-  const user = {
-    email,
-    password
-  };
+  const formData = new FormData();
+  formData.append('username', email);
+  formData.append('password', password);
 
-  const request = await axios.post(`${URL}/login`, user);
+  const request = await axios.post(LOGIN_URL, formData);
   return request.data;
 };

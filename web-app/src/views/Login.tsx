@@ -20,14 +20,8 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      const response = await loginUser(email, password);
-      dispatch(
-        setUserLogged(
-          response.user.id.toString(),
-          response.user.email,
-          response.expires
-        )
-      );
+      const { access_token, refresh_token } = await loginUser(email, password);
+      dispatch(setUserLogged(access_token, refresh_token, true));
     } catch (error) {
       console.error('error', error);
       setError('Login failed');
