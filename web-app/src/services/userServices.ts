@@ -24,10 +24,6 @@ export const loginUser = async (
   email: string,
   password: string
 ): Promise<LoginResponse> => {
-  const formData = new FormData();
-  formData.append('username', email);
-  formData.append('password', password);
-
-  const request = await axios.post(LOGIN_URL, formData);
+  const request = await axios.post(LOGIN_URL, { username: email, password });
   return request.data;
 };

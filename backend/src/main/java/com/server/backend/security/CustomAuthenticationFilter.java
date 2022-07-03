@@ -3,10 +3,11 @@ package com.server.backend.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -33,11 +34,18 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        log.info("Username is: {}", username);
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-        return authenticationManager.authenticate(authenticationToken);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            AuthReq authReq = mapper.readValue(request.getInputStream(), AuthReq.class);
+
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                    authReq.getUsername(), authReq.getPassword()
+            );
+            return authenticationManager.authenticate(token);
+        } catch (Exception e) {
+            log.error("Error on parsing request, message: {}", e.getMessage());
+            throw new InternalAuthenticationServiceException("Failed to parse authentication request body");
+        }
     }
 
     @Override
@@ -47,7 +55,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             FilterChain chain,
             Authentication authentication
     ) throws IOException, ServletException {
-        User user = (User)authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
 
         String accessToken = JWT.create()
                 .withSubject(user.getUsername())
@@ -69,4 +77,12 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         tokens.put("refresh_token", refreshToken);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
+
+    @Data
+    public static class AuthReq {
+        String username;
+        String password;
+    }
+
 }
+

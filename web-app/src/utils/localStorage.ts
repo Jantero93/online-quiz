@@ -1,33 +1,32 @@
-import moment from 'moment';
-
-const LOGGING_TIME = 3;
 const STORAGE_KEY = 'logged-data';
 
 type LocalStorageLogin = {
-  email: string;
-  logExpires: string;
+  accessToken: string;
+  refreshToken: string;
 };
 
-export const clearLoginData = () => localStorage.removeItem(STORAGE_KEY);
+export const clearTokensLocalStorage = (): void =>
+  localStorage.removeItem(STORAGE_KEY);
 
-export const isLogged = (): boolean => {
-  const JSONData = localStorage.getItem(STORAGE_KEY);
+export const saveTokensLocalStorage = (
+  accessToken: string,
+  refreshToken: string
+): void =>
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({ accessToken, refreshToken })
+  );
 
-  if (JSONData == null) return false;
+export const getTokenLocalStorage = (
+  token: 'access' | 'refresh'
+): string | null => {
+  const JSONtokens = localStorage.getItem(STORAGE_KEY);
 
-  const data: LocalStorageLogin = JSON.parse(JSONData);
+  if (JSONtokens == null) return null;
 
-  const now = moment();
-  const expires = moment(data.logExpires);
+  const { accessToken, refreshToken } = JSON.parse(
+    JSONtokens
+  ) as LocalStorageLogin;
 
-  return expires.isAfter(now);
-};
-
-export const saveLogToLocalStorage = (email: string): void => {
-  const storageLogin: LocalStorageLogin = {
-    email,
-    logExpires: moment().add(LOGGING_TIME, 'hour').toISOString()
-  };
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(storageLogin));
+  return token == 'access' ? accessToken : refreshToken;
 };

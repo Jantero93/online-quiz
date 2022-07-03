@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import Button from 'react-bootstrap/esm/Button';
@@ -9,11 +9,14 @@ import { setUserLogged } from '../store/actions/userActions';
 
 import { loginUser } from '../services/userServices';
 
+import { saveTokensLocalStorage } from '../utils/localStorage';
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -22,6 +25,8 @@ const Login = () => {
     try {
       const { access_token, refresh_token } = await loginUser(email, password);
       dispatch(setUserLogged(access_token, refresh_token, true));
+      saveTokensLocalStorage(access_token, refresh_token);
+      navigate('/');
     } catch (error) {
       console.error('error', error);
       setError('Login failed');
