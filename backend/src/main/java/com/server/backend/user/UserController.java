@@ -27,11 +27,6 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/")
-    public String hello() {
-        return "hello";
-    }
-
     @PostMapping("/user")
     public User saveUser(@RequestBody User user) {
         log.info("Creating new user");
@@ -47,7 +42,7 @@ public class UserController {
     @PostMapping("/role/addtouser")
     public ResponseEntity<Optional<?>> addRoleToUser(@RequestBody RoleToUserForm form) {
         log.info("Adding new role {} to user {}", form.getRoleName(), form.getUsername());
-        userService.addRoleToUser(form.getUsername(), form.getUsername());
+        userService.addRoleToUser(form.getUsername(), form.getRoleName());
         return ResponseEntity.ok().build();
     }
 

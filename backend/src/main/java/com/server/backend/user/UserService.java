@@ -32,7 +32,10 @@ public class UserService implements UserDetailsService {
 
     public User saveUser(User user) {
         log.info("Saving new user {} to the database", user.getUsername());
+        Role role = roleRepository.findByName(RoleEnum.NORMAL.name());
+
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.getRoles().add(role);
         return userRepository.save(user);
     }
 
