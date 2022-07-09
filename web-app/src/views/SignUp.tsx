@@ -73,7 +73,7 @@ const SignUp = () => {
           variant="dark"
           onClick={() => navigate('/login')}
         >
-          Login
+          Back
         </Button>
         <Button className="_Max_Width_150" variant="info" type="submit">
           Sign up

@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import NavBar from 'react-bootstrap/NavBar';
-import NavDropdown from 'react-bootstrap/esm/NavDropdown';
 
 const NavigationBar = () => {
   return (
@@ -16,24 +15,18 @@ const NavigationBar = () => {
         <NavBar.Toggle aria-controls="NavBarScroll" />
         <NavBar.Collapse id="NavBarScroll">
           <Nav className="me-auto my-2 my-lg-0">
-            <Nav.Link as={Link} to="/">
-              Home
+            <Nav.Link as={Link} to="quiz/play">
+              Play
             </Nav.Link>
-            <Nav.Link as={Link} to="custom-calendar">
-              Calendar
+            <Nav.Link as={Link} to="question/add">
+              Add question
             </Nav.Link>
-            <NavDropdown title="Online-quiz" id="basic-nav-dropdown">
-              <NavDropdown.Item as={Link} to="/quiz/play">
-                Play
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item as={Link} to="/question/add">
-                Add question
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="quiz/hiscores">
-                Leaderboard
-              </NavDropdown.Item>
-            </NavDropdown>
+            <Nav.Link as={Link} to="user/leaderboard">
+              Leaderboard
+            </Nav.Link>
+            <Nav.Link as={Link} to="user/statistics">
+              Statistics
+            </Nav.Link>
           </Nav>
           <Nav.Link className="_ColorDepth-3" as={Link} to="login">
             Login

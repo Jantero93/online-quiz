@@ -54,7 +54,7 @@ const Login = () => {
       <Button variant={'info'} type="submit">
         Login
       </Button>
-      <p>
+      <p className="mt-2">
         No account? <Link to="/login/sign-up">Register here</Link>
       </p>
       {error && <p className="_Error-Text">{error}</p>}
