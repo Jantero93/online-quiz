@@ -1,3 +1,3 @@
 export const CONFIG = {
-  PORT: 8080
+  PORT: process.env.PORT || 8080
 };

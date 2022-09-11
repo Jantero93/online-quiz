@@ -1,6 +1,9 @@
 import express, { Application, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 
+import { CONFIG } from './Config/EnvironmentVariables';
+import * as logger from './Common/Logger';
+
 const app: Application = express();
 
 app.use(bodyParser.json());
@@ -10,8 +13,6 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Healthy');
 });
 
-const PORT = process.env.PORT || 8000;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on PORT ${PORT}`);
+app.listen(CONFIG.PORT, () => {
+  logger.info(`Server is running on PORT ${CONFIG.PORT}`);
 });
