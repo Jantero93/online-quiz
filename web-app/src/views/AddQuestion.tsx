@@ -4,9 +4,9 @@ import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
 import FormLabel from 'react-bootstrap/esm/FormLabel';
 
-import { postQuestion } from '../services/questionService';
+import { postQuestion, PostQuestion } from '../services/questionService';
 
-import { Difficulty, Question } from '../types/question';
+import { Difficulty } from '../types/question';
 
 const AddQuestion = () => {
   const [question, setQuestion] = useState('');
@@ -25,12 +25,12 @@ const AddQuestion = () => {
     setDifficulty('easy');
   };
 
-  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const submitQuestion = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!validInput()) return;
 
-    const newQuestion: Partial<Question> = {
+    const newQuestion: PostQuestion = {
       correctOption: correct,
       difficulty,
       question,
@@ -52,7 +52,7 @@ const AddQuestion = () => {
     if (set.size !== 4) return false;
     if (!question) return false;
     if (question.length > 1023) return false;
-    if (optionArray.some((option) => option === '')) return false;
+    if (optionArray.some((option) => option.trim() === '')) return false;
 
     return true;
   };
@@ -60,7 +60,7 @@ const AddQuestion = () => {
   return (
     <Form
       className="_Max_Width_500 mx-auto _ColorDepth-Bg-4 mt-5 p-3 rounded"
-      onSubmit={submit}
+      onSubmit={submitQuestion}
     >
       <Form.Group className="mb-3" controlId="formQuestion">
         <Form.Label>Question</Form.Label>

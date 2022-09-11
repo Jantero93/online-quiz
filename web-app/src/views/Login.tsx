@@ -40,7 +40,7 @@ const Login = () => {
     >
       <Form.Group className="mb-3" controlId="email">
         <Form.Label>Email address</Form.Label>
-        <Form.Control onChange={(e) => setEmail(e.target.value)} type="email" />
+        <Form.Control onChange={(e) => setEmail(e.target.value)} />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="password">

@@ -3,8 +3,10 @@ import axios from 'axios';
 
 const URL = '/api/question';
 
+export type PostQuestion = Omit<Question, 'userCreated'>;
+
 export const postQuestion = async (
-  question: Partial<Question>
+  question: PostQuestion
 ): Promise<Question> => {
   const request = await axios.post(URL, question);
   return request.data;
