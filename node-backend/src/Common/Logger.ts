@@ -1,34 +1,27 @@
-/* eslint-disable no-console */
-import colors from 'colors';
+import winston from 'winston';
 
-const NODE_ENV_IS_TEST = process.env.NODE_ENV === 'test';
+const IS_NODE_ENV_TEST = process.env.NODE_ENV === 'test';
+export const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.cli(),
+  transports: [new winston.transports.Console()]
+});
 
 export const info = (...params: unknown[]) => {
-  !NODE_ENV_IS_TEST && console.log(colors.blue('Logger INFO:'), ...params);
+  if (!IS_NODE_ENV_TEST) {
+    logger.info(params);
+  }
 };
-
 export const error = (...params: unknown[]) => {
-  !NODE_ENV_IS_TEST && console.log(colors.red('Logger ERROR:'), ...params);
+  if (!IS_NODE_ENV_TEST) {
+    logger.error(params);
+  }
 };
 
 export const warning = (...params: unknown[]) => {
-  !NODE_ENV_IS_TEST && console.log(colors.yellow('Logger WARNING:'), ...params);
-};
-
-export const printStack = (layer: string, funcName: string) => {
-  if (!NODE_ENV_IS_TEST) {
-    console.log(`Layer: ${colors.green(layer)}`);
-    console.log(`Function: ${colors.yellow(funcName)}`);
-    console.log(`---`);
+  if (!IS_NODE_ENV_TEST) {
+    logger.warn(params);
   }
 };
 
-export const responseDB = (...params: unknown[]) => {
-  if (!NODE_ENV_IS_TEST) {
-    console.log(`Response from DB:`);
-    console.log(...params);
-    console.log('---');
-  }
-};
-
-export default { info, error, printStack, responseDB };
+export default { info, error, warning };
