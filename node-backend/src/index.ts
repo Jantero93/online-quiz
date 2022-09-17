@@ -1,18 +1,14 @@
-import express, { Application, Request, Response } from 'express';
-import bodyParser from 'body-parser';
-
+import app from './App';
 import { CONFIG } from './Config/EnvironmentVariables';
 import * as logger from './Common/Logger';
+import { createServer } from 'http';
 
-const app: Application = express();
+const server = createServer(app);
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('Healthy');
-});
-
-app.listen(CONFIG.PORT, () => {
-  logger.info(`Server is running on PORT ${CONFIG.PORT}`);
-});
+try {
+  server.listen(CONFIG.PORT, () =>
+    logger.info(`Connected to port ${CONFIG.PORT}`)
+  );
+} catch (error) {
+  logger.error(error);
+}
