@@ -3,19 +3,19 @@ import colors from 'colors';
 
 const NODE_ENV_IS_TEST = process.env.NODE_ENV === 'test';
 
-export const info = (...params: unknown[]): void => {
+export const info = (...params: unknown[]) => {
   !NODE_ENV_IS_TEST && console.log(colors.blue('Logger INFO:'), ...params);
 };
 
-export const error = (...params: unknown[]): void => {
+export const error = (...params: unknown[]) => {
   !NODE_ENV_IS_TEST && console.log(colors.red('Logger ERROR:'), ...params);
 };
 
-export const warning = (...params: unknown[]): void => {
+export const warning = (...params: unknown[]) => {
   !NODE_ENV_IS_TEST && console.log(colors.yellow('Logger WARNING:'), ...params);
 };
 
-export const printStack = (layer: string, funcName: string): void => {
+export const printStack = (layer: string, funcName: string) => {
   if (!NODE_ENV_IS_TEST) {
     console.log(`Layer: ${colors.green(layer)}`);
     console.log(`Function: ${colors.yellow(funcName)}`);
@@ -23,7 +23,7 @@ export const printStack = (layer: string, funcName: string): void => {
   }
 };
 
-export const responseDB = (...params: unknown[]): void => {
+export const responseDB = (...params: unknown[]) => {
   if (!NODE_ENV_IS_TEST) {
     console.log(`Response from DB:`);
     console.log(...params);

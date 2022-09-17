@@ -24,10 +24,13 @@
     "helmet": "^5.0.2",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
+    "pg": "^8.8.0",
+    "pg-types": "^4.0.0",
     "ts-custom-error": "^3.2.0"
   },
   "devDependencies": {
     "@types/node": "^8.0.29",
+    "@types/pg": "^8.6.5",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
     "eslint": "^8.7.0",
