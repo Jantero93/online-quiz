@@ -24,4 +24,10 @@ export const warning = (...params: unknown[]) => {
   }
 };
 
+export const debug = (...params: unknown[]) => {
+  if (!IS_NODE_ENV_TEST) {
+    logger.debug(params);
+  }
+};
+
 export default { info, error, warning };
