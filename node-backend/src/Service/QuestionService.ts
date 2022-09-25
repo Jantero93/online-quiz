@@ -9,3 +9,8 @@ export const postNewQuestion = async (question: PostQuestion) => {
   const dbQuestion = await QuestionStore.postQuestionDB(question);
   return dbQuestion;
 };
+
+export const deleteQuestion = async (id: number) => {
+  LOGGER.info(`Deleting question with id ${id}`);
+  await QuestionStore.deleteQuestionDB(id);
+};

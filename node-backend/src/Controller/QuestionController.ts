@@ -17,3 +17,18 @@ export const postQuestion = async (
     next(error);
   }
 };
+
+export const deleteQuestion = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  LOGGER.info('Controller: Delete question');
+
+  try {
+    await QuestionService.deleteQuestion(Number(req.params.id));
+    res.send({ message: 'Question deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
