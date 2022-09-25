@@ -17,12 +17,14 @@ export const errorLogger = (
 export const errorResponser = (
   err: ResponseError,
   _req: Request,
-  res: Response
+  res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _next: NextFunction
 ) => {
   LOGGER.error(`Sending error from error middleware`);
 
   const sendResponse = (message: string, statusCode: number) =>
-    res.status(statusCode).send(message);
+    res.status(statusCode).send({ error: message });
 
   switch (err.errorType) {
     case '400BadRequest':

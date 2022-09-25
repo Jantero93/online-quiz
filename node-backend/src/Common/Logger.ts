@@ -10,24 +10,24 @@ const winstonLogger = winston.createLogger({
 
 const info = (...params: unknown[]) => {
   if (!IS_NODE_ENV_TEST) {
-    winstonLogger.info(params);
+    winstonLogger.info(JSON.stringify(params));
   }
 };
 
 const error = (...params: unknown[]) => {
   if (!IS_NODE_ENV_TEST) {
-    winstonLogger.error(params);
+    winstonLogger.error(JSON.stringify(params));
   }
 };
 
 const warning = (...params: unknown[]) => {
   if (!IS_NODE_ENV_TEST) {
-    winstonLogger.warning(params);
+    winstonLogger.warning(JSON.stringify(params));
   }
 };
 
 const debug = (...params: unknown[]) => {
-  winstonLogger.debug(params);
+  winstonLogger.debug(JSON.stringify(params));
 };
 
 export const LOGGER = {
