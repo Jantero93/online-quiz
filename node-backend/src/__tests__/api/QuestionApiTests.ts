@@ -1,5 +1,5 @@
-import { dbClient } from './../../DB/DB';
-import { Question } from './../../Types/Question';
+import { dbClient } from '../../DB/DB';
+import { Question } from '../../Types/Question';
 import { PostQuestion } from '../../Service/QuestionService';
 import app from '../../App';
 import request from 'supertest';
@@ -15,14 +15,21 @@ describe('Question API tests', () => {
     const dbQuestion = res.body as Question;
 
     expect(res.statusCode).toEqual(200);
+    expect(dbQuestion.id).toBeTruthy();
     expect(dbQuestion.question).toEqual(question.question);
     expect(dbQuestion.correct_option).toEqual(question.correct_option);
     expect(dbQuestion.difficulty).toEqual(question.difficulty);
 
-    await request(app).delete(`/api/question/${dbQuestion.id}`);
+    const deleteRes = await request(app).delete(
+      `/api/question/${dbQuestion.id}`
+    );
+    expect(deleteRes.statusCode).toEqual(200);
   });
 });
 
+/**
+ * app creates connect to database
+ */
 afterAll(async () => {
   await dbClient.end();
 });

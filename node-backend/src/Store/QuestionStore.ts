@@ -5,6 +5,8 @@ import ResponseError from '../Common/ResponseError';
 import { LOGGER } from '../Common/Logger';
 
 export const postQuestionDB = async (question: PostQuestion) => {
+  LOGGER.info('Posting question to DB:', question);
+
   const query = `
   INSERT INTO questions(question, correct_option, difficulty)
   VALUES ($1, $2, $3)
@@ -20,7 +22,6 @@ export const postQuestionDB = async (question: PostQuestion) => {
   try {
     const dbResponse = await dbClient.query(query, values);
     const response = dbResponse.rows[0];
-    LOGGER.info('Posting question to DB:', response);
 
     return response as Question;
   } catch (error) {
@@ -32,6 +33,8 @@ export const postQuestionDB = async (question: PostQuestion) => {
 };
 
 export const deleteQuestionDB = async (id: number) => {
+  LOGGER.info(`Deleting question from database with id ${id}`);
+
   const dbQuestion = await dbClient.query(
     `SELECT * FROM questions WHERE id = $1`,
     [id]
