@@ -13,7 +13,7 @@ export const postQuestionDB = async (question: PostQuestion) => {
 
   const values = [
     question.question,
-    question.correctOption,
+    question.correct_option,
     question.difficulty
   ];
 

@@ -1,6 +1,6 @@
 export type Question = {
   id: number;
   question: string;
-  correctOption: string;
+  correct_option: string;
   difficulty: string;
 };
