@@ -1,33 +1,38 @@
 import winston from 'winston';
 
-const IS_NODE_ENV_TEST = process.env.NODE_ENV === 'test';
-export const LOGGER = winston.createLogger({
+const IS_NODE_ENV_TEST = process.env.NODE_ENV?.toLowerCase() === 'test';
+
+const winstonLogger = winston.createLogger({
   level: 'info',
   format: winston.format.cli(),
   transports: [new winston.transports.Console()]
 });
 
-export const info = (...params: unknown[]) => {
+const info = (...params: unknown[]) => {
   if (!IS_NODE_ENV_TEST) {
-    LOGGER.info(params);
-  }
-};
-export const error = (...params: unknown[]) => {
-  if (!IS_NODE_ENV_TEST) {
-    LOGGER.error(params);
+    winstonLogger.info(params);
   }
 };
 
-export const warning = (...params: unknown[]) => {
+const error = (...params: unknown[]) => {
   if (!IS_NODE_ENV_TEST) {
-    LOGGER.warn(params);
+    winstonLogger.error(params);
   }
 };
 
-export const debug = (...params: unknown[]) => {
+const warning = (...params: unknown[]) => {
   if (!IS_NODE_ENV_TEST) {
-    LOGGER.debug(params);
+    winstonLogger.warning(params);
   }
 };
 
-export default { info, error, warning };
+const debug = (...params: unknown[]) => {
+  winstonLogger.debug(params);
+};
+
+export const LOGGER = {
+  info: info,
+  warning: warning,
+  error: error,
+  debug: debug
+};

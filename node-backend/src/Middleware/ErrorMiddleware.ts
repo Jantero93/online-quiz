@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import Logger from '../Common/Logger';
+import { LOGGER } from '../Common/Logger';
 import ResponseError from '../Common/ResponseError';
 
 export const errorLogger = (
@@ -8,9 +8,9 @@ export const errorLogger = (
   _res: Response,
   next: NextFunction
 ) => {
-  Logger.error(`Error middleware triggered`);
-  Logger.error(`Message: ${err.message}`);
-  Logger.error(`Error type: ${err.errorType}`);
+  LOGGER.error(`Error middleware triggered`);
+  LOGGER.error(`Message: ${err.message}`);
+  LOGGER.error(`Error type: ${err.errorType}`);
   next(err);
 };
 
@@ -19,7 +19,7 @@ export const errorResponser = (
   _req: Request,
   res: Response
 ) => {
-  Logger.error(`Sending error from error middleware`);
+  LOGGER.error(`Sending error from error middleware`);
 
   const sendResponse = (message: string, statusCode: number) =>
     res.status(statusCode).send(message);
