@@ -14,3 +14,8 @@ export const deleteQuestion = async (id: number) => {
   LOGGER.info(`Deleting question with id ${id}`);
   await QuestionStore.deleteQuestionDB(id);
 };
+
+export const getQuestion = async (id: number) => {
+  LOGGER.info(`Getting question with id ${id}`);
+  return await QuestionStore.getQuestionDB(id);
+};

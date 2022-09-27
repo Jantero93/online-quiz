@@ -35,12 +35,14 @@ export const postQuestionDB = async (question: PostQuestion) => {
 export const deleteQuestionDB = async (id: number) => {
   LOGGER.info(`Deleting question from database with id ${id}`);
 
-  const dbQuestion = await dbClient.query(
-    `SELECT * FROM questions WHERE id = $1`,
+  const dbResponse = await dbClient.query(
+    `SELECT id, question, correct_option, difficulty
+    FROM questions
+    WHERE id = $1`,
     [id]
   );
 
-  if (!dbQuestion.rows.length)
+  if (!dbResponse.rows.length)
     throw new ResponseError(`Not found question with id ${id}`, '404NotFound');
 
   const deleteQuery = `
@@ -56,4 +58,20 @@ export const deleteQuestionDB = async (id: number) => {
       '500InternalServerError'
     );
   }
+};
+
+export const getQuestionDB = async (id: number) => {
+  LOGGER.info(`Fetching question from DB with id ${id}`);
+
+  const dbResponse = await dbClient.query(
+    `SELECT id, question, correct_option, difficulty
+    FROM questions
+    WHERE id = $1`,
+    [id]
+  );
+
+  if (!dbResponse.rows.length)
+    throw new ResponseError(`Not found question with id ${id}`, '404NotFound');
+
+  return dbResponse.rows[0] as Question;
 };
