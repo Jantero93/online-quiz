@@ -23,12 +23,13 @@ describe('Question API tests', () => {
     const deleteRes = await request(app).delete(
       `/api/question/${dbQuestion.id}`
     );
+
     expect(deleteRes.statusCode).toEqual(200);
   });
 
   it('Delete Question should return 404', async () => {
     const nullId = -9999;
-    const res = await request(app).delete(`/api/question/${nullId}`).send();
+    const res = await request(app).delete(`/api/question/${nullId}`);
     expect(res.statusCode).toEqual(404);
   });
 
@@ -42,12 +43,12 @@ describe('Question API tests', () => {
     const postRes = await request(app).post('/api/question').send(testQuestion);
     const dbQuestion = postRes.body as Question;
 
-    const res = await request(app).get(`/api/question/${dbQuestion.id}`).send();
+    const res = await request(app).get(`/api/question/${dbQuestion.id}`);
     const getQuestion = res.body as Question;
 
-    const deleteRes = await request(app)
-      .delete(`/api/question/${dbQuestion.id}`)
-      .send();
+    const deleteRes = await request(app).delete(
+      `/api/question/${dbQuestion.id}`
+    );
 
     expect(deleteRes.statusCode).toEqual(200);
     expect(postRes.statusCode).toEqual(200);
@@ -61,7 +62,7 @@ describe('Question API tests', () => {
 
   it('Get Question should return 404', async () => {
     const nullId = -1;
-    const res = await request(app).get(`/api/question/${nullId}`).send();
+    const res = await request(app).get(`/api/question/${nullId}`);
     expect(res.statusCode).toEqual(404);
   });
 });
