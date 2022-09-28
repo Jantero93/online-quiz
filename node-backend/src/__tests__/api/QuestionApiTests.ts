@@ -8,6 +8,7 @@ describe('Question API tests', () => {
   it('Post/Delete new Question should return 200', async () => {
     const question: PostQuestion = {
       correct_option: 'CORRECT ANSWER',
+      wrong_options: ['wrong1', 'wrong2', 'wrong3'],
       difficulty: 'EASY',
       question: 'IS THIS EVEN QUESTION?'
     };
@@ -37,6 +38,7 @@ describe('Question API tests', () => {
     const testQuestion: PostQuestion = {
       correct_option: 'test_option',
       difficulty: 'test_difficulty',
+      wrong_options: ['wrong1', 'wrong2', 'wrong3'],
       question: 'test_question'
     };
 
@@ -46,9 +48,9 @@ describe('Question API tests', () => {
     const res = await request(app).get(`/api/question/${dbQuestion.id}`);
     const getQuestion = res.body as Question;
 
-    const deleteRes = await request(app).delete(
-      `/api/question/${dbQuestion.id}`
-    );
+    const deleteRes = await request(app)
+      .delete(`/api/question/${dbQuestion.id}`)
+      .send();
 
     expect(deleteRes.statusCode).toEqual(200);
     expect(postRes.statusCode).toEqual(200);
