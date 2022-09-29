@@ -1,8 +1,7 @@
-import { QuestionWrongOption } from './../Types/Question';
-import { PostQuestionWrongOptions } from './../Service/QuestionService';
+import { QuestionWrongOption, Question } from './../Types/Question';
 import { PostQuestion } from '../Service/QuestionService';
 import { dbClient } from '../DB/DB';
-import { Question } from '../Types/Question';
+
 import ResponseError from '../Common/ResponseError';
 import { LOGGER } from '../Common/Logger';
 
@@ -35,7 +34,7 @@ export const postQuestionDB = async (question: PostQuestion) => {
 };
 
 export const postQuestionWrongOptionsDB = async (
-  wrongOptions: PostQuestionWrongOptions,
+  wrongOptions: string[],
   questionId: number
 ) => {
   LOGGER.info('Posting wrong options to DB:', wrongOptions);
