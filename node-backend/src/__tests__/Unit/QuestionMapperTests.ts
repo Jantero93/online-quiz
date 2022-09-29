@@ -7,10 +7,10 @@ describe('Question mapper tests', () => {
       difficulty: 'easy',
       id: -123,
       question: 'question',
-      wrong_options: [
-        { id: 12, question_id: -123, wrong_option: 'wrong1' },
-        { id: 13, question_id: -123, wrong_option: 'wrong2' },
-        { id: 14, question_id: -123, wrong_option: 'wrong3' }
+      wrong_options: [] as unknown as [
+        QuestionWrongOption,
+        QuestionWrongOption,
+        QuestionWrongOption
       ]
     };
 
@@ -26,14 +26,8 @@ describe('Question mapper tests', () => {
     expect(dto.question).toEqual(question.question);
     expect(dto.correct_option).toEqual(question.correct_option);
     expect(dto.difficulty).toEqual(question.difficulty);
-    expect(dto.wrong_options[0]).toEqual(
-      question.wrong_options[0].wrong_option
-    );
-    expect(dto.wrong_options[1]).toEqual(
-      question.wrong_options[1].wrong_option
-    );
-    expect(dto.wrong_options[2]).toEqual(
-      question.wrong_options[2].wrong_option
-    );
+    expect(dto.wrong_options[0]).toEqual(wrongOptions[0].wrong_option);
+    expect(dto.wrong_options[1]).toEqual(wrongOptions[1].wrong_option);
+    expect(dto.wrong_options[2]).toEqual(wrongOptions[2].wrong_option);
   });
 });

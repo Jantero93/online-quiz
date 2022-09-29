@@ -1,5 +1,5 @@
 import { LOGGER } from '../Common/Logger';
-import { Response, Request, NextFunction, response } from 'express';
+import { Response, Request, NextFunction } from 'express';
 
 import * as QuestionService from '../Service/QuestionService';
 
