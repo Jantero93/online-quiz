@@ -1,7 +1,7 @@
 export type Question = {
   question: string;
-  correctOption: string;
-  wrongOptions: [string, string, string];
+  correct_option: string;
+  wrong_options: [string, string, string];
   difficulty: string;
   userCreated: number;
 };

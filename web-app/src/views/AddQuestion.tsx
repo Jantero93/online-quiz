@@ -31,10 +31,10 @@ const AddQuestion = () => {
     if (!validInput()) return;
 
     const newQuestion: PostQuestion = {
-      correctOption: correct,
+      correct_option: correct,
       difficulty,
       question,
-      wrongOptions: [option2, option3, option4]
+      wrong_options: [option2, option3, option4]
     };
 
     try {
