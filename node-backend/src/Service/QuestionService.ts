@@ -24,7 +24,11 @@ export const deleteQuestion = async (id: number) => {
 };
 
 export const getQuestion = async (id: number) => {
-  // TODO: RETURN WRONG OPTIONS
   LOGGER.info(`Service: Getting question with id ${id}`);
-  return QuestionStore.getQuestionDB(id);
+  const question = await QuestionStore.getQuestionDB(id);
+  const questionWrongOptions = await QuestionStore.getQuestionWrongOptionsDB(
+    id
+  );
+
+  return QuestionMapper.mapQuestionToDto(question, questionWrongOptions);
 };

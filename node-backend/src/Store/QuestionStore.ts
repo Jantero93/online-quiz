@@ -117,6 +117,43 @@ export const getQuestionDB = async (id: number) => {
   return dbResponse.rows[0] as Question;
 };
 
+export const getQuestionWrongOptionsDB = async (questionId: number) => {
+  LOGGER.info(`Fetching question wrong options from DB with id ${questionId}`);
+
+  const isQuestion = await questionExists(questionId);
+  if (!isQuestion)
+    throw new ResponseError(
+      `Not found question with id ${questionId}`,
+      '404NotFound'
+    );
+
+  const dbResponse = await dbClient.query(
+    `SELECT id, wrong_option, question_id
+    FROM questions_wrong_options
+    WHERE question_id = $1
+    `,
+    [questionId]
+  );
+
+  if (dbResponse.rows.length !== 3) {
+    if (dbResponse.rows.length !== 3 && dbResponse.rows.length !== 0) {
+      LOGGER.error(
+        `Found wrong options for question but not three with question id ${questionId}`
+      );
+    }
+    throw new ResponseError(
+      `Not found question wrong options with question id ${questionId}`,
+      '404NotFound'
+    );
+  }
+
+  return [
+    dbResponse.rows[0],
+    dbResponse.rows[1],
+    dbResponse.rows[2]
+  ] as QuestionWrongOption[];
+};
+
 const questionExists = async (id: number) => {
   const dbResponse = await dbClient.query(
     `SELECT id, question, correct_option, difficulty
@@ -125,5 +162,5 @@ const questionExists = async (id: number) => {
     [id]
   );
 
-  return dbResponse.rows.length;
+  return dbResponse.rows.length !== 0;
 };

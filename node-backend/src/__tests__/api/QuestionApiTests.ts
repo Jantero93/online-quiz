@@ -60,6 +60,9 @@ describe('Question API tests', () => {
     expect(getQuestion.question).toEqual(testQuestion.question);
     expect(getQuestion.correct_option).toEqual(testQuestion.correct_option);
     expect(getQuestion.difficulty).toEqual(testQuestion.difficulty);
+    expect(getQuestion.wrong_options[0]).toEqual(testQuestion.wrong_options[0]);
+    expect(getQuestion.wrong_options[1]).toEqual(testQuestion.wrong_options[1]);
+    expect(getQuestion.wrong_options[2]).toEqual(testQuestion.wrong_options[2]);
   });
 
   it('Get Question should return 404', async () => {
@@ -70,7 +73,7 @@ describe('Question API tests', () => {
 });
 
 /**
- * app creates connect to database
+ * Mocking app creates connect to database
  */
 afterAll(async () => {
   await dbClient.end();
