@@ -3,11 +3,6 @@ export type Question = {
   id: number;
   question: string;
   correct_option: string;
-  wrong_options: [
-    QuestionWrongOption,
-    QuestionWrongOption,
-    QuestionWrongOption
-  ];
   difficulty: string;
 };
 

@@ -6,12 +6,7 @@ describe('Question mapper tests', () => {
       correct_option: 'correct',
       difficulty: 'easy',
       id: -123,
-      question: 'question',
-      wrong_options: [] as unknown as [
-        QuestionWrongOption,
-        QuestionWrongOption,
-        QuestionWrongOption
-      ]
+      question: 'question'
     };
 
     const wrongOptions: QuestionWrongOption[] = [

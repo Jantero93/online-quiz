@@ -1,11 +1,11 @@
 import { dbClient } from '../../DB/DB';
-import { Question } from '../../Types/Question';
+import { QuestionDTO } from '../../Types/Question';
 import { PostQuestion } from '../../Service/QuestionService';
 import app from '../../App';
 import request from 'supertest';
 
 describe('Question API tests', () => {
-  it('Post/Delete new Question should return 200', async () => {
+  it('Post & Delete new Question should return 200', async () => {
     const question: PostQuestion = {
       correct_option: 'CORRECT ANSWER',
       wrong_options: ['wrong1', 'wrong2', 'wrong3'],
@@ -13,7 +13,7 @@ describe('Question API tests', () => {
       question: 'IS THIS EVEN QUESTION?'
     };
     const res = await request(app).post('/api/question').send(question);
-    const dbQuestion = res.body as Question;
+    const dbQuestion = res.body as QuestionDTO;
 
     expect(res.statusCode).toEqual(200);
     expect(dbQuestion.id).toBeTruthy();
@@ -43,10 +43,10 @@ describe('Question API tests', () => {
     };
 
     const postRes = await request(app).post('/api/question').send(testQuestion);
-    const dbQuestion = postRes.body as Question;
+    const dbQuestion = postRes.body as QuestionDTO;
 
     const res = await request(app).get(`/api/question/${dbQuestion.id}`);
-    const getQuestion = res.body as Question;
+    const getQuestion = res.body as QuestionDTO;
 
     const deleteRes = await request(app)
       .delete(`/api/question/${dbQuestion.id}`)
