@@ -12,6 +12,7 @@ type ErrorType =
   | '408RequestTimeout'
   | '409Conflict'
   | '500InternalServerError';
+
 export default class ResponseError extends CustomError {
   public constructor(message: string, public errorType: ErrorType) {
     super(message);

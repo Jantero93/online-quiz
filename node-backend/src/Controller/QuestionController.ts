@@ -23,10 +23,11 @@ export const deleteQuestion = async (
   res: Response,
   next: NextFunction
 ) => {
-  LOGGER.info('Controller: Delete question');
+  const id = Number(req.params.id);
+  LOGGER.info(`Controller: Delete question with id ${id}`);
 
   try {
-    await QuestionService.deleteQuestion(Number(req.params.id));
+    await QuestionService.deleteQuestion(id);
     res.send({ message: 'Question deleted successfully' });
   } catch (error) {
     next(error);

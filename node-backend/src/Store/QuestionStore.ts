@@ -5,7 +5,9 @@ import { dbClient } from '../DB/DB';
 import ResponseError from '../Common/ResponseError';
 import { LOGGER } from '../Common/Logger';
 
-export const postQuestionDB = async (question: PostQuestion) => {
+export const postQuestionDB = async (
+  question: PostQuestion
+): Promise<Question> => {
   LOGGER.info('Posting question to DB:', question);
 
   const query = `
@@ -36,7 +38,7 @@ export const postQuestionDB = async (question: PostQuestion) => {
 export const postQuestionWrongOptionsDB = async (
   wrongOptions: string[],
   questionId: number
-) => {
+): Promise<QuestionWrongOption[]> => {
   LOGGER.info('Posting wrong options to DB:', wrongOptions);
   const query = `
   INSERT INTO questions_wrong_options(wrong_option, question_id)
@@ -101,7 +103,7 @@ export const deleteWrongOptionsQuestionDB = async (questionId: number) => {
   }
 };
 
-export const getQuestionDB = async (id: number) => {
+export const getQuestionDB = async (id: number): Promise<Question> => {
   LOGGER.info(`Fetching question from DB with id ${id}`);
 
   const dbResponse = await dbClient.query(
@@ -117,7 +119,9 @@ export const getQuestionDB = async (id: number) => {
   return dbResponse.rows[0] as Question;
 };
 
-export const getQuestionWrongOptionsDB = async (questionId: number) => {
+export const getQuestionWrongOptionsDB = async (
+  questionId: number
+): Promise<QuestionWrongOption[]> => {
   LOGGER.info(`Fetching question wrong options from DB with id ${questionId}`);
 
   const isQuestion = await questionExists(questionId);
@@ -154,7 +158,7 @@ export const getQuestionWrongOptionsDB = async (questionId: number) => {
   ] as QuestionWrongOption[];
 };
 
-const questionExists = async (id: number) => {
+const questionExists = async (id: number): Promise<boolean> => {
   const dbResponse = await dbClient.query(
     `SELECT id, question, correct_option, difficulty
     FROM questions

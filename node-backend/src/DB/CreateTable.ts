@@ -18,7 +18,7 @@ const createQuestionsTable = async () => {
     )
     `;
   const queryWrongOptionsTable = `
-  CREATE TABLE IF NOT EXISTS "${questionsWrongOptionsTable}" (
+    CREATE TABLE IF NOT EXISTS "${questionsWrongOptionsTable}" (
     "id" SERIAL NOT NULL,
     "wrong_option" VARCHAR(255) NOT NULL,
     "question_id" SERIAL NOT NULL,
