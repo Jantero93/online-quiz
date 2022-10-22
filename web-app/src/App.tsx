@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AddQuestion from './views/AddQuestion';
 import HomePage from './views/HomePage';
 import NavigationBar from './components/NavigationBar';
+import Play from './views/Play';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/colors.css';
@@ -23,7 +24,9 @@ const App = () => {
         {/* Main */}
         <Route path="/" key={'home'} element={<HomePage />} />
         <Route path="*" element={<NotFound />} />
-        {/* Quiz */}
+        {/* Game */}
+        <Route path="/play" element={<Play />} />
+        {/* Question */}
         <Route
           path="/question/add"
           key={'add-question'}

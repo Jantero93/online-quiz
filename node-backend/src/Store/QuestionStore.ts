@@ -107,7 +107,8 @@ export const getQuestionDB = async (id: number): Promise<Question> => {
   LOGGER.info(`Fetching question from DB with id ${id}`);
 
   const dbResponse = await dbClient.query(
-    `SELECT id, question, correct_option, difficulty
+    `
+    SELECT id, question, correct_option, difficulty
     FROM questions
     WHERE id = $1`,
     [id]
@@ -127,12 +128,14 @@ export const getQuestionWrongOptionsDB = async (
   const isQuestion = await questionExists(questionId);
   if (!isQuestion)
     throw new ResponseError(
-      `Not found question with id ${questionId}`,
+      `
+      Not found question with id ${questionId}`,
       '404NotFound'
     );
 
   const dbResponse = await dbClient.query(
-    `SELECT id, wrong_option, question_id
+    `
+    SELECT id, wrong_option, question_id
     FROM questions_wrong_options
     WHERE question_id = $1
     `,
@@ -160,7 +163,8 @@ export const getQuestionWrongOptionsDB = async (
 
 const questionExists = async (id: number): Promise<boolean> => {
   const dbResponse = await dbClient.query(
-    `SELECT id, question, correct_option, difficulty
+    `
+    SELECT id, question, correct_option, difficulty
     FROM questions
     WHERE id = $1`,
     [id]

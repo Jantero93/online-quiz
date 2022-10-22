@@ -15,7 +15,7 @@ const NavigationBar = () => {
         <NavBar.Toggle aria-controls="NavBarScroll" />
         <NavBar.Collapse id="NavBarScroll">
           <Nav className="me-auto my-2 my-lg-0">
-            <Nav.Link as={Link} to="quiz/play">
+            <Nav.Link as={Link} to="play">
               Play
             </Nav.Link>
             <Nav.Link as={Link} to="question/add">
