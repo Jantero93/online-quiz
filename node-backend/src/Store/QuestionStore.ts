@@ -1,16 +1,28 @@
-import { QuestionWrongOption, Question } from './../Types/Question';
+import {
+  QuestionWrongOption,
+  Question,
+  QuestionDTO
+} from './../Types/Question';
 import { PostQuestion } from '../Service/QuestionService';
 import { dbClient } from '../DB/DB';
 
 import ResponseError from '../Common/ResponseError';
 import { LOGGER } from '../Common/Logger';
+import QuestionMapper from '../Common/Mapper/QuestionMapper';
 
-const postQuestion = async (question: PostQuestion): Promise<Question> => {
+const postQuestion = async (question: PostQuestion): Promise<QuestionDTO> => {
   LOGGER.info('Posting question to DB:', question);
 
-  const query = `
+  const queryQuestion = `
   INSERT INTO questions(question, correct_option, difficulty)
   VALUES ($1, $2, $3)
+  RETURNING *
+  `;
+
+  LOGGER.info('Posting wrong options to DB:', question.wrong_options);
+  const queryOptions = `
+  INSERT INTO questions_wrong_options(wrong_option, question_id)
+  VALUES ($1, $2)
   RETURNING *
   `;
 
@@ -21,11 +33,25 @@ const postQuestion = async (question: PostQuestion): Promise<Question> => {
   ];
 
   try {
-    const dbResponse = await dbClient.query(query, values);
-    const response = dbResponse.rows[0] as Question;
+    // Post question
+    const dbResponse = await dbClient.query(queryQuestion, values);
+    const questionDb = dbResponse.rows[0] as Question;
 
-    return response;
+    // Post wrong options
+    const wrongOptionDbList = await Promise.all(
+      question.wrong_options.map(async (option) => {
+        const dbResponseWrongOption = await dbClient.query(queryOptions, [
+          option,
+          questionDb.id
+        ]);
+
+        return dbResponseWrongOption.rows[0] as QuestionWrongOption;
+      })
+    );
+
+    return QuestionMapper.mapQuestionToDto(questionDb, wrongOptionDbList);
   } catch (error) {
+    LOGGER.error((error as Error).message);
     throw new ResponseError(
       (error as Error).message || 'Post question db query failed',
       '500InternalServerError'
@@ -33,67 +59,40 @@ const postQuestion = async (question: PostQuestion): Promise<Question> => {
   }
 };
 
-const postQuestionWrongOptions = async (
-  wrongOptions: string[],
-  questionId: number
-): Promise<QuestionWrongOption[]> => {
-  LOGGER.info('Posting wrong options to DB:', wrongOptions);
-  const query = `
-  INSERT INTO questions_wrong_options(wrong_option, question_id)
-  VALUES ($1, $2)
-  RETURNING *`;
-
-  const dbWrongOptions = await Promise.all(
-    wrongOptions.map(async (option) => {
-      const response = await dbClient.query(query, [option, questionId]);
-      return response.rows[0] as QuestionWrongOption;
-    })
-  );
-  return dbWrongOptions;
-};
-
-const deleteQuestion = async (id: number) => {
-  LOGGER.info(`Deleting question from database with id ${id}`);
-
-  const deleteQuery = `
-  DELETE FROM questions
-  WHERE id = $1
-  `;
+const deleteQuestion = async (id: number): Promise<void> => {
+  LOGGER.info(`Deleting questions wrong options from database with id ${id}`);
 
   const isQuestion = await questionExists(id);
-  if (!isQuestion)
+  if (!isQuestion) {
     throw new ResponseError(`Not found question with id ${id}`, '404NotFound');
-
-  try {
-    await dbClient.query(deleteQuery, [id]);
-  } catch (error) {
-    throw new ResponseError(
-      (error as Error).message || 'Delete question db query failed',
-      '500InternalServerError'
-    );
   }
-};
 
-const deleteWrongOptions = async (questionId: number) => {
-  LOGGER.info(
-    `Deleting questions wrong options from database with id ${questionId}`
-  );
-
-  const isQuestion = await questionExists(questionId);
-  if (!isQuestion)
-    throw new ResponseError(
-      `Not found question with id ${questionId}`,
-      '404NotFound'
-    );
-
-  const query = `
+  const deleteQueryOptions = `
   DELETE FROM questions_wrong_options
   WHERE question_id = $1
   `;
 
   try {
-    await dbClient.query(query, [questionId]);
+    await dbClient.query(deleteQueryOptions, [id]);
   } catch (error) {
+    LOGGER.error((error as Error).message);
+    throw new ResponseError(
+      (error as Error).message || 'Delete question db query failed',
+      '500InternalServerError'
+    );
+  }
+
+  LOGGER.info(`Deleting question from database with id ${id}`);
+
+  const deleteQueryQuestion = `
+    DELETE FROM questions
+    WHERE id = $1
+    `;
+
+  try {
+    await dbClient.query(deleteQueryQuestion, [id]);
+  } catch (error) {
+    LOGGER.error((error as Error).message);
     throw new ResponseError(
       (error as Error).message || 'Delete question db query failed',
       '500InternalServerError'
@@ -101,10 +100,16 @@ const deleteWrongOptions = async (questionId: number) => {
   }
 };
 
-const getQuestion = async (id: number): Promise<Question> => {
+const getQuestion = async (id: number): Promise<QuestionDTO> => {
   LOGGER.info(`Fetching question from DB with id ${id}`);
 
-  const dbResponse = await dbClient.query(
+  const isExisting = await questionExists(id);
+  if (!isExisting) {
+    LOGGER.error(`Not found question with id ${id}`);
+    throw new ResponseError(`Not found question with id ${id}`, '404NotFound');
+  }
+
+  const dbResponseQuestion = await dbClient.query(
     `
     SELECT id, question, correct_option, difficulty
     FROM questions
@@ -113,50 +118,32 @@ const getQuestion = async (id: number): Promise<Question> => {
     [id]
   );
 
-  if (!dbResponse.rows.length)
-    throw new ResponseError(`Not found question with id ${id}`, '404NotFound');
+  const questionDb = dbResponseQuestion.rows[0] as Question;
 
-  return dbResponse.rows[0] as Question;
-};
-
-const getQuestionWrongOptions = async (
-  questionId: number
-): Promise<QuestionWrongOption[]> => {
-  LOGGER.info(`Fetching question wrong options from DB with id ${questionId}`);
-
-  const isQuestion = await questionExists(questionId);
-  if (!isQuestion)
-    throw new ResponseError(
-      `Not found question with id ${questionId}`,
-      '404NotFound'
-    );
-
-  const dbResponse = await dbClient.query(
+  const dbResponseOptions = await dbClient.query(
     `
     SELECT id, wrong_option, question_id
     FROM questions_wrong_options
     WHERE question_id = $1
     `,
-    [questionId]
+    [id]
   );
 
-  if (dbResponse.rows.length !== 3) {
-    if (dbResponse.rows.length !== 3 && dbResponse.rows.length !== 0) {
-      LOGGER.error(
-        `Found wrong options for question but not three with question id ${questionId}`
-      );
-    }
+  if (!dbResponseOptions.rowCount) {
+    LOGGER.error(`Not found question wrong options with question id ${id}`);
     throw new ResponseError(
-      `Not found question wrong options with question id ${questionId}`,
+      `Not found question wrong options with question id ${id}`,
       '404NotFound'
     );
   }
 
-  return [
-    dbResponse.rows[0],
-    dbResponse.rows[1],
-    dbResponse.rows[2]
+  const wrongOptionsDb = [
+    dbResponseOptions.rows[0],
+    dbResponseOptions.rows[1],
+    dbResponseOptions.rows[2]
   ] as QuestionWrongOption[];
+
+  return QuestionMapper.mapQuestionToDto(questionDb, wrongOptionsDb);
 };
 
 const questionExists = async (id: number): Promise<boolean> => {
@@ -174,9 +161,6 @@ const questionExists = async (id: number): Promise<boolean> => {
 
 export default {
   postQuestion,
-  postQuestionWrongOptions,
   deleteQuestion,
-  deleteWrongOptions,
-  getQuestion,
-  getQuestionWrongOptions
+  getQuestion
 };

@@ -11,7 +11,7 @@ const createQuestionsTable = async () => {
   const queryQuestionTable = `
     CREATE TABLE IF NOT EXISTS "${questionsTable}" (
     "id" SERIAL NOT NULL,
-    "question" VARCHAR(1000) NOT NULL UNIQUE,
+    "question" VARCHAR(1000) NOT NULL,
     "correct_option" VARCHAR(255) NOT NULL,
     "difficulty" VARCHAR(255) NOT NULL,
     PRIMARY KEY("id")
