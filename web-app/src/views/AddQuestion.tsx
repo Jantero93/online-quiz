@@ -41,10 +41,10 @@ const AddQuestion = () => {
     if (!validInput()) return;
 
     const newQuestion: PostQuestion = {
-      correct_option: correct,
-      difficulty,
-      question,
-      wrong_options: [option2, option3, option4]
+      correct_option: correct.trim(),
+      difficulty: difficulty.trim(),
+      question: question.trim(),
+      wrong_options: [option2.trim(), option3.trim(), option4.trim()]
     };
 
     try {
@@ -62,7 +62,7 @@ const AddQuestion = () => {
     const set = new Set(optionArray);
 
     if (set.size !== 4) return false;
-    if (!question) return false;
+    if (!question.trim()) return false;
     if (question.length > 1023) return false;
     if (optionArray.some((option) => option.trim() === '')) return false;
 

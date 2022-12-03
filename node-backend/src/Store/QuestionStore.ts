@@ -110,7 +110,8 @@ export const getQuestionDB = async (id: number): Promise<Question> => {
     `
     SELECT id, question, correct_option, difficulty
     FROM questions
-    WHERE id = $1`,
+    WHERE id = $1
+    `,
     [id]
   );
 
@@ -128,8 +129,7 @@ export const getQuestionWrongOptionsDB = async (
   const isQuestion = await questionExists(questionId);
   if (!isQuestion)
     throw new ResponseError(
-      `
-      Not found question with id ${questionId}`,
+      `Not found question with id ${questionId}`,
       '404NotFound'
     );
 
@@ -166,7 +166,8 @@ const questionExists = async (id: number): Promise<boolean> => {
     `
     SELECT id, question, correct_option, difficulty
     FROM questions
-    WHERE id = $1`,
+    WHERE id = $1
+    `,
     [id]
   );
 

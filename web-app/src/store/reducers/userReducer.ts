@@ -1,28 +1,26 @@
 export interface UserState {
-  isLogged: boolean;
-  accessToken: string;
-  refreshToken: string;
+  nickname?: string;
+  gameId?: string;
 }
 
 const initialState: UserState = {
-  isLogged: false,
-  accessToken: '',
-  refreshToken: ''
+  nickname: undefined,
+  gameId: undefined
 };
 
-export type SetUserLog = {
-  type: 'SET_USER_LOGGED';
+export type SetUserInfo = {
+  type: 'SET_USER_INFO';
   payload: UserState;
 };
 
-export type UserActions = SetUserLog;
+export type UserActions = SetUserInfo;
 
 export const userReducer = (
   state: UserState = initialState,
   action: UserActions
 ): UserState => {
   switch (action.type) {
-    case 'SET_USER_LOGGED': {
+    case 'SET_USER_INFO': {
       return action.payload;
     }
 

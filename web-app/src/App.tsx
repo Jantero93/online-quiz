@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import AddQuestion from './views/AddQuestion';
-import HomePage from './views/HomePage';
+import GamePlay from './components/game/GamePlay';
 import NavigationBar from './components/NavigationBar';
 import Play from './views/Play';
 
@@ -22,16 +22,16 @@ const App = () => {
       <NavigationBar />
       <Routes>
         {/* Main */}
-        <Route path="/" key={'home'} element={<HomePage />} />
+        <Route path="/" key="home" element={<Play />} />
         <Route path="*" element={<NotFound />} />
-        {/* Game */}
-        <Route path="/play" element={<Play />} />
         {/* Question */}
         <Route
           path="/question/add"
-          key={'add-question'}
+          key="add-question"
           element={<AddQuestion />}
         />
+        {/* Game play */}
+        <Route path="game/:gameId" key="GamePlay" element={<GamePlay />} />
       </Routes>
     </Router>
   );

@@ -1,14 +1,9 @@
-import { SetUserLog } from '../reducers/userReducer';
+import { SetUserInfo } from '../reducers/userReducer';
 
-export const setUserLogged = (
-  accessToken: string,
-  refreshToken: string,
-  isLogged: boolean
-): SetUserLog => ({
+export const setUserInfo = (gameId: string, nickname: string): SetUserInfo => ({
+  type: 'SET_USER_INFO',
   payload: {
-    accessToken,
-    refreshToken,
-    isLogged
-  },
-  type: 'SET_USER_LOGGED'
+    gameId,
+    nickname
+  }
 });
