@@ -11,21 +11,6 @@ import { LOGGER } from '../Common/Logger';
 import QuestionMapper from '../Common/Mapper/QuestionMapper';
 
 const postQuestion = async (question: PostQuestion): Promise<QuestionDTO> => {
-  LOGGER.info('Posting question to DB:', question);
-
-  const queryQuestion = `
-  INSERT INTO questions(question, correct_option, difficulty)
-  VALUES ($1, $2, $3)
-  RETURNING *
-  `;
-
-  LOGGER.info('Posting wrong options to DB:', question.wrong_options);
-  const queryOptions = `
-  INSERT INTO questions_wrong_options(wrong_option, question_id)
-  VALUES ($1, $2)
-  RETURNING *
-  `;
-
   const values = [
     question.question,
     question.correct_option,
@@ -33,17 +18,32 @@ const postQuestion = async (question: PostQuestion): Promise<QuestionDTO> => {
   ];
 
   try {
+    LOGGER.info('Posting question to DB:', question);
+
     // Post question
-    const dbResponse = await dbClient.query(queryQuestion, values);
+    const dbResponse = await dbClient.query(
+      `
+    INSERT INTO questions(question, correct_option, difficulty)
+    VALUES ($1, $2, $3)
+    RETURNING *
+    `,
+      values
+    );
     const questionDb = dbResponse.rows[0] as Question;
+
+    LOGGER.info('Posting wrong options to DB:', question.wrong_options);
 
     // Post wrong options
     const wrongOptionDbList = await Promise.all(
       question.wrong_options.map(async (option) => {
-        const dbResponseWrongOption = await dbClient.query(queryOptions, [
-          option,
-          questionDb.id
-        ]);
+        const dbResponseWrongOption = await dbClient.query(
+          `
+        INSERT INTO questions_wrong_options(wrong_option, question_id)
+        VALUES ($1, $2)
+        RETURNING *
+        `,
+          [option, questionDb.id]
+        );
 
         return dbResponseWrongOption.rows[0] as QuestionWrongOption;
       })
@@ -67,13 +67,14 @@ const deleteQuestion = async (id: number): Promise<void> => {
     throw new ResponseError(`Not found question with id ${id}`, '404NotFound');
   }
 
-  const deleteQueryOptions = `
-  DELETE FROM questions_wrong_options
-  WHERE question_id = $1
-  `;
-
   try {
-    await dbClient.query(deleteQueryOptions, [id]);
+    await dbClient.query(
+      `
+    DELETE FROM questions_wrong_options
+    WHERE question_id = $1
+    `,
+      [id]
+    );
   } catch (error) {
     LOGGER.error((error as Error).message);
     throw new ResponseError(
@@ -84,13 +85,14 @@ const deleteQuestion = async (id: number): Promise<void> => {
 
   LOGGER.info(`Deleting question from database with id ${id}`);
 
-  const deleteQueryQuestion = `
+  try {
+    await dbClient.query(
+      `
     DELETE FROM questions
     WHERE id = $1
-    `;
-
-  try {
-    await dbClient.query(deleteQueryQuestion, [id]);
+    `,
+      [id]
+    );
   } catch (error) {
     LOGGER.error((error as Error).message);
     throw new ResponseError(
