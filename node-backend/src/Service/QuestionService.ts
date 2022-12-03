@@ -5,16 +5,14 @@ import { LOGGER } from '../Common/Logger';
 
 export type PostQuestion = Omit<QuestionDTO, 'id'>;
 
-const postNewQuestion = async (
-  question: PostQuestion
-): Promise<QuestionDTO> => {
-  LOGGER.info('Service: Posting new question', question);
-  return await QuestionStore.postQuestion(question);
-};
-
 const deleteQuestion = async (id: number) => {
   LOGGER.info(`Service: Deleting question with id ${id}`);
   await QuestionStore.deleteQuestion(id);
+};
+
+const getAllQuestions = async () => {
+  LOGGER.info('Service: Getting all quesitons from database');
+  return await QuestionStore.getAllQuestions();
 };
 
 const getQuestion = async (id: number): Promise<QuestionDTO> => {
@@ -22,8 +20,16 @@ const getQuestion = async (id: number): Promise<QuestionDTO> => {
   return await QuestionStore.getQuestion(id);
 };
 
+const postNewQuestion = async (
+  question: PostQuestion
+): Promise<QuestionDTO> => {
+  LOGGER.info('Service: Posting new question', question);
+  return await QuestionStore.postQuestion(question);
+};
+
 export default {
-  getQuestion,
   deleteQuestion,
+  getAllQuestions,
+  getQuestion,
   postNewQuestion
 };

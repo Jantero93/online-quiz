@@ -61,7 +61,7 @@ export const errorResponser = (
       sendResponse(err.message, 500);
       break;
     default:
-      sendResponse('Internal Server Error', 500);
+      sendResponse(err.message || 'Internal Server Error', 500);
       break;
   }
 };
