@@ -1,4 +1,4 @@
-import { QuestionMapper } from './../../Common/Mapper/QuestionMapping';
+import QuestionMapper from '../../Common/Mapper/QuestionMapper';
 import { Question, QuestionWrongOption } from './../../Types/Question';
 describe('Question mapper tests', () => {
   test('Map model question to question dto, should return correct', () => {

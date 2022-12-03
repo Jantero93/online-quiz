@@ -5,9 +5,7 @@ import { dbClient } from '../DB/DB';
 import ResponseError from '../Common/ResponseError';
 import { LOGGER } from '../Common/Logger';
 
-export const postQuestionDB = async (
-  question: PostQuestion
-): Promise<Question> => {
+const postQuestion = async (question: PostQuestion): Promise<Question> => {
   LOGGER.info('Posting question to DB:', question);
 
   const query = `
@@ -35,7 +33,7 @@ export const postQuestionDB = async (
   }
 };
 
-export const postQuestionWrongOptionsDB = async (
+const postQuestionWrongOptions = async (
   wrongOptions: string[],
   questionId: number
 ): Promise<QuestionWrongOption[]> => {
@@ -54,7 +52,7 @@ export const postQuestionWrongOptionsDB = async (
   return dbWrongOptions;
 };
 
-export const deleteQuestionDB = async (id: number) => {
+const deleteQuestion = async (id: number) => {
   LOGGER.info(`Deleting question from database with id ${id}`);
 
   const deleteQuery = `
@@ -76,7 +74,7 @@ export const deleteQuestionDB = async (id: number) => {
   }
 };
 
-export const deleteWrongOptionsQuestionDB = async (questionId: number) => {
+const deleteWrongOptions = async (questionId: number) => {
   LOGGER.info(
     `Deleting questions wrong options from database with id ${questionId}`
   );
@@ -103,7 +101,7 @@ export const deleteWrongOptionsQuestionDB = async (questionId: number) => {
   }
 };
 
-export const getQuestionDB = async (id: number): Promise<Question> => {
+const getQuestion = async (id: number): Promise<Question> => {
   LOGGER.info(`Fetching question from DB with id ${id}`);
 
   const dbResponse = await dbClient.query(
@@ -121,7 +119,7 @@ export const getQuestionDB = async (id: number): Promise<Question> => {
   return dbResponse.rows[0] as Question;
 };
 
-export const getQuestionWrongOptionsDB = async (
+const getQuestionWrongOptions = async (
   questionId: number
 ): Promise<QuestionWrongOption[]> => {
   LOGGER.info(`Fetching question wrong options from DB with id ${questionId}`);
@@ -172,4 +170,13 @@ const questionExists = async (id: number): Promise<boolean> => {
   );
 
   return dbResponse.rows.length !== 0;
+};
+
+export default {
+  postQuestion,
+  postQuestionWrongOptions,
+  deleteQuestion,
+  deleteWrongOptions,
+  getQuestion,
+  getQuestionWrongOptions
 };

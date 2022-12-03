@@ -1,7 +1,7 @@
+import QuestionService from '../Service/QuestionService';
+
 import { LOGGER } from '../Common/Logger';
 import { Response, Request, NextFunction } from 'express';
-
-import * as QuestionService from '../Service/QuestionService';
 
 export const postQuestion = async (
   req: Request,

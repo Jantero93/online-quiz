@@ -25,6 +25,6 @@ const mapQuestionToDto = (
   return questionDTO;
 };
 
-export const QuestionMapper = {
-  mapQuestionToDto: mapQuestionToDto
+export default {
+  mapQuestionToDto
 };
