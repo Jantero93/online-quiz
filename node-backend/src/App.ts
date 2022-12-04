@@ -1,9 +1,12 @@
-import { errorLogger, errorResponser } from './Middleware/ErrorMiddleware';
-import { dbClient } from './DB/DB';
 import express from 'express';
-import cors from 'cors';
-import { requestLogger } from './Middleware/RequestLogger';
 import routes from './Routes/index';
+
+import { dbClient } from './DB/DB';
+
+import { errorLogger, errorResponser } from './Middleware/ErrorMiddleware';
+import { requestLogger } from './Middleware/RequestLogger';
+
+import cors from 'cors';
 
 dbClient.connect();
 
