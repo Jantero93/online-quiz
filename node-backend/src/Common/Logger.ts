@@ -1,6 +1,6 @@
 import winston from 'winston';
-
-const IS_NODE_ENV_TEST = process.env.NODE_ENV?.toLowerCase() === 'test';
+import { isObjectOrArray } from './HelperFunctions';
+import { ENV } from '../Config/EnvironmentVariables';
 
 const winstonLogger = winston.createLogger({
   level: 'info',
@@ -8,31 +8,27 @@ const winstonLogger = winston.createLogger({
   transports: [new winston.transports.Console()]
 });
 
-const info = (...params: unknown[]) => {
-  if (!IS_NODE_ENV_TEST) {
-    winstonLogger.info(JSON.stringify(params));
-  }
-};
+const paramToLoggerFormat = (param: unknown) =>
+  isObjectOrArray(param) ? JSON.stringify(param) : param;
 
-const error = (...params: unknown[]) => {
-  if (!IS_NODE_ENV_TEST) {
-    winstonLogger.error(JSON.stringify(params));
-  }
-};
+const info = (...params: unknown[]) =>
+  ENV.NODE_ENV !== 'test' &&
+  params.forEach((p) => winstonLogger.info(paramToLoggerFormat(p)));
 
-const warning = (...params: unknown[]) => {
-  if (!IS_NODE_ENV_TEST) {
-    winstonLogger.warning(JSON.stringify(params));
-  }
-};
+const error = (...params: unknown[]) =>
+  ENV.NODE_ENV !== 'test' &&
+  params.forEach((p) => winstonLogger.error(paramToLoggerFormat(p)));
 
-const debug = (...params: unknown[]) => {
-  winstonLogger.debug(JSON.stringify(params));
-};
+const warning = (...params: unknown[]) =>
+  ENV.NODE_ENV !== 'test' &&
+  params.forEach((p) => winstonLogger.warn(paramToLoggerFormat(p)));
+
+const debug = (...params: unknown[]) =>
+  params.forEach((p) => winstonLogger.debug(paramToLoggerFormat(p)));
 
 export const LOGGER = {
-  info: info,
-  warning: warning,
-  error: error,
-  debug: debug
+  info,
+  warning,
+  error,
+  debug
 };

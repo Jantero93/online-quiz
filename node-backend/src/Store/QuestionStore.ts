@@ -91,7 +91,7 @@ const getQuestion = async (id: number): Promise<QuestionDTO> => {
 
   const isExisting = await questionExists(id);
   if (!isExisting) {
-    LOGGER.error(`Not found question with id ${id}`);
+    LOGGER.warning(`Not found question with id ${id}`);
     throw new ResponseError(`Not found question with id ${id}`, '404NotFound');
   }
 
@@ -116,7 +116,7 @@ const getQuestion = async (id: number): Promise<QuestionDTO> => {
   );
 
   if (!dbResponseOptions.rowCount) {
-    LOGGER.error(`Not found question wrong options with question id ${id}`);
+    LOGGER.warning(`Not found question wrong options with question id ${id}`);
     throw new ResponseError(
       `Not found question wrong options with question id ${id}`,
       '404NotFound'

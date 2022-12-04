@@ -1,5 +1,20 @@
+const getNODE_ENV = () => {
+  const { NODE_ENV } = process.env;
+
+  if (
+    NODE_ENV === 'production' ||
+    NODE_ENV === 'development' ||
+    NODE_ENV === 'test'
+  ) {
+    return NODE_ENV;
+  }
+
+  throw new Error('No valid environment variable NODE_ENV');
+};
+
 export const ENV = {
-  PORT: process.env.PORT || 8080
+  PORT: process.env.PORT || 8080,
+  NODE_ENV: getNODE_ENV()
 };
 
 export const DB_ENV = {
