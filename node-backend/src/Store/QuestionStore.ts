@@ -7,7 +7,7 @@ import { PostQuestion } from '../Service/QuestionService';
 import { dbClient } from '../DB/DB';
 
 import ResponseError from '../Common/ResponseError';
-import { LOGGER } from '../Common/Logger';
+import LOGGER from '../Common/Logger';
 import QuestionMapper from '../Common/Mapper/QuestionMapper';
 
 const deleteQuestion = async (id: number): Promise<void> => {

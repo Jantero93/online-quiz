@@ -26,7 +26,7 @@ const warning = (...params: unknown[]) =>
 const debug = (...params: unknown[]) =>
   params.forEach((p) => winstonLogger.debug(paramToLoggerFormat(p)));
 
-export const LOGGER = {
+export default {
   info,
   warning,
   error,

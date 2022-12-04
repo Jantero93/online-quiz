@@ -1,7 +1,7 @@
 import QuestionStore from '../Store/QuestionStore';
 
 import { QuestionDTO } from './../Types/Question';
-import { LOGGER } from '../Common/Logger';
+import LOGGER from '../Common/Logger';
 
 export type PostQuestion = Omit<QuestionDTO, 'id'>;
 

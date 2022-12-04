@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { LOGGER } from '../Common/Logger';
+import LOGGER from '../Common/Logger';
 import ResponseError from '../Common/ResponseError';
 
 export const errorLogger = (

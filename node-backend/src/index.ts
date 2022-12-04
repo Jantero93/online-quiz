@@ -1,6 +1,6 @@
 import app from './App';
 import { ENV } from './Config/EnvironmentVariables';
-import { LOGGER } from './Common/Logger';
+import LOGGER from './Common/Logger';
 import { createServer } from 'http';
 import { initTables } from './DB/CreateTable';
 

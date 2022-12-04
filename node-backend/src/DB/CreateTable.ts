@@ -1,4 +1,4 @@
-import { LOGGER } from './../Common/Logger';
+import LOGGER from './../Common/Logger';
 import { dbClient } from './DB';
 
 import {

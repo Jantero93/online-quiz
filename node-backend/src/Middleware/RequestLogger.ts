@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { LOGGER } from '../Common/Logger';
+import LOGGER from '../Common/Logger';
 import { isObjectEmpty } from '../Common/HelperFunctions';
 
 export const requestLogger = (
