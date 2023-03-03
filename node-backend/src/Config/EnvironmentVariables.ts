@@ -1,11 +1,7 @@
 const getNODE_ENV = () => {
   const { NODE_ENV } = process.env;
 
-  if (
-    NODE_ENV === 'production' ||
-    NODE_ENV === 'development' ||
-    NODE_ENV === 'test'
-  ) {
+  if (NODE_ENV === 'production' || NODE_ENV === 'development' || NODE_ENV === 'test') {
     return NODE_ENV;
   }
 

@@ -1,8 +1,4 @@
-import {
-  Question,
-  QuestionWrongOption,
-  QuestionDTO
-} from '../../Types/Question';
+import { Question, QuestionWrongOption, QuestionDTO } from '../../Types/Question';
 
 const mapQuestionToDto = (
   question: Question,

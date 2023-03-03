@@ -21,9 +21,7 @@ describe('Question API tests', () => {
     expect(dbQuestion.correct_option).toEqual(question.correct_option);
     expect(dbQuestion.difficulty).toEqual(question.difficulty);
 
-    const deleteRes = await request(app).delete(
-      `/api/question/${dbQuestion.id}`
-    );
+    const deleteRes = await request(app).delete(`/api/question/${dbQuestion.id}`);
 
     expect(deleteRes.statusCode).toEqual(200);
   });
@@ -48,9 +46,7 @@ describe('Question API tests', () => {
     const res = await request(app).get(`/api/question/${dbQuestion.id}`);
     const getQuestion = res.body as QuestionDTO;
 
-    const deleteRes = await request(app)
-      .delete(`/api/question/${dbQuestion.id}`)
-      .send();
+    const deleteRes = await request(app).delete(`/api/question/${dbQuestion.id}`).send();
 
     expect(deleteRes.statusCode).toEqual(200);
     expect(postRes.statusCode).toEqual(200);

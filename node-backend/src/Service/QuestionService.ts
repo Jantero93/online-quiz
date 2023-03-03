@@ -20,9 +20,7 @@ const getQuestion = async (id: number): Promise<QuestionDTO> => {
   return await QuestionStore.getQuestion(id);
 };
 
-const postNewQuestion = async (
-  question: PostQuestion
-): Promise<QuestionDTO> => {
+const postNewQuestion = async (question: PostQuestion): Promise<QuestionDTO> => {
   LOGGER.info('Service: Posting new question', question);
   return await QuestionStore.postQuestion(question);
 };

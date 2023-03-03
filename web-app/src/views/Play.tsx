@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { setUserInfo } from '../store/actions/userActions';
 
 /* UI */
 import Button from 'react-bootstrap/esm/Button';
@@ -6,11 +7,9 @@ import Container from 'react-bootstrap/esm/Container';
 import Form from 'react-bootstrap/esm/Form';
 import InputGroup from 'react-bootstrap/esm/InputGroup';
 
-import { SetUserInfo } from '../store/reducers/userReducer';
-
 const Play = (): JSX.Element => {
-  const [nickname, setNickname] = useState<string>('');
-  const [gameId, setGameId] = useState<string>('');
+  const [nickname, setNickname] = React.useState<string>('');
+  const [gameId, setGameId] = React.useState<string>('');
 
   const validateUserName = (userName: string): boolean => {
     const onlyLettersNumberRegex = '^[a-zA-Z0-9_.-]*$';

@@ -1,11 +1,7 @@
 import LOGGER from './../Common/Logger';
 import { dbClient } from './DB';
 
-import {
-  questionsTable,
-  questionsWrongOptionsTable,
-  dbTables
-} from '../Common/DatabaseTables';
+import { questionsTable, questionsWrongOptionsTable, dbTables } from '../Common/DatabaseTables';
 
 const createQuestionsTable = async () => {
   const queryQuestionTable = `
@@ -50,14 +46,12 @@ const tablesExist = async () => {
   const prefixQuery = `SELECT to_regclass('TABLE_NAME')`;
 
   const tableExists = async (tableName: string) => {
-    const response = await dbClient.query(
-      prefixQuery.replace('TABLE_NAME', tableName)
-    );
+    const response = await dbClient.query(prefixQuery.replace('TABLE_NAME', tableName));
 
     return response.rows[0].to_regclass !== null;
   };
 
-  return (
-    await Promise.all(dbTables.map((tableName) => tableExists(tableName)))
-  ).every((isTableCreated) => isTableCreated);
+  return (await Promise.all(dbTables.map((tableName) => tableExists(tableName)))).every(
+    (isTableCreated) => isTableCreated
+  );
 };

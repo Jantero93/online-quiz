@@ -3,11 +3,7 @@ import QuestionService from '../Service/QuestionService';
 import LOGGER from '../Common/Logger';
 import { Response, Request, NextFunction } from 'express';
 
-export const postQuestion = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const postQuestion = async (req: Request, res: Response, next: NextFunction) => {
   LOGGER.info('Controller: Post question');
 
   try {
@@ -18,11 +14,7 @@ export const postQuestion = async (
   }
 };
 
-export const deleteQuestion = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const deleteQuestion = async (req: Request, res: Response, next: NextFunction) => {
   const id = Number(req.params.id);
   LOGGER.info(`Controller: Delete question with id ${id}`);
 
@@ -34,11 +26,7 @@ export const deleteQuestion = async (
   }
 };
 
-export const getQuestion = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const getQuestion = async (req: Request, res: Response, next: NextFunction) => {
   const id = Number(req.params.id);
   LOGGER.info(`Get question with id ${id}`);
 

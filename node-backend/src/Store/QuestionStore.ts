@@ -1,8 +1,4 @@
-import {
-  QuestionWrongOption,
-  Question,
-  QuestionDTO
-} from './../Types/Question';
+import { QuestionWrongOption, Question, QuestionDTO } from './../Types/Question';
 import { PostQuestion } from '../Service/QuestionService';
 import { dbClient } from '../DB/DB';
 
@@ -133,11 +129,7 @@ const getQuestion = async (id: number): Promise<QuestionDTO> => {
 };
 
 const postQuestion = async (question: PostQuestion): Promise<QuestionDTO> => {
-  const values = [
-    question.question,
-    question.correct_option,
-    question.difficulty
-  ];
+  const values = [question.question, question.correct_option, question.difficulty];
 
   try {
     LOGGER.info('Posting question to DB:', question);
