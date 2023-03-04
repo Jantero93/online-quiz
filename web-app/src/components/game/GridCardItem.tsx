@@ -17,7 +17,8 @@ const GridCardItem = ({
   const [hover, setHover] = React.useState(false);
 
   const onHoverStyles: React.CSSProperties = {
-    color: 'pink'
+    color: 'pink',
+    cursor: 'pointer'
   };
 
   return (
