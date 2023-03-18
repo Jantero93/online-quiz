@@ -51,7 +51,11 @@ const tablesExist = async () => {
     return response.rows[0].to_regclass !== null;
   };
 
-  return (await Promise.all(dbTables.map((tableName) => tableExists(tableName)))).every(
-    (isTableCreated) => isTableCreated
+  const tableExistsBoolList = await Promise.all(
+    dbTables.map((tableName) => tableExists(tableName))
   );
+
+  const allTablesExists = tableExistsBoolList.every((isTableExisting) => isTableExisting);
+
+  return allTablesExists;
 };

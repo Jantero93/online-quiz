@@ -14,13 +14,7 @@ export const errorLogger = (
   next(err);
 };
 
-export const errorResponser = (
-  err: ResponseError,
-  _req: Request,
-  res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _next: NextFunction
-) => {
+export const errorResponser = (err: ResponseError, _req: Request, res: Response) => {
   LOGGER.error(`Sending error from error middleware`);
 
   const sendResponse = (message: string, statusCode: number) =>
